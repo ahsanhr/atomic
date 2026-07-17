@@ -26,10 +26,12 @@ def create_app(config_class=Config):
     CORS(app, origins=app.config["FRONTEND_ORIGIN"])
 
     from app.routes import api
+    from app.auth import auth_bp
     from app.openai_service import openai_api
     from app.budget_routes import budget_api
 
     app.register_blueprint(api, url_prefix="/api")
+    app.register_blueprint(auth_bp)
     app.register_blueprint(openai_api, url_prefix="/api")
     app.register_blueprint(budget_api, url_prefix="/api")
 
