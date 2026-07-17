@@ -17,3 +17,7 @@
 //   - connect routes to page components
 //   - apply the shared layout to protected pages
 //   - later support protected-route behavior
+
+export default function App() {
+  return <main>Atomic</main>;
+}

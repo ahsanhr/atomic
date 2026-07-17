@@ -6,3 +6,11 @@ it available to the Flask development server.
 
 No server startup implementation should be added yet.
 """
+
+from app import create_app
+
+app = create_app()
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
