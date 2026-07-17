@@ -1,0 +1,14 @@
+# requirements.txt — future Python dependencies
+#
+# planned packages:
+#   Flask
+#   Flask-SQLAlchemy
+#   Flask-CORS
+#   Flask-JWT-Extended
+#   bcrypt
+#   openai
+#   plaid-python
+#   python-dotenv
+#   pytest
+#
+# do not add or install packages yet

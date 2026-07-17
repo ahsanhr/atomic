@@ -1,0 +1,21 @@
+/*
+styles.css — global visual system
+
+defines the shared look and feel of Sprout
+
+style direction:
+  - warm, cartoon-like interface
+  - cream, sage, mustard, and coral palette
+  - rounded cards and controls
+  - chunky pill-shaped buttons
+  - soft borders rather than harsh shadows
+  - responsive desktop and mobile layouts
+
+responsibilities:
+  - CSS variables and design tokens
+  - typography
+  - shared page layout
+  - buttons, cards, forms, and navigation
+  - animations for Sprout and level celebrations
+  - responsive breakpoints
+*/
