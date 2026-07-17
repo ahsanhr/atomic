@@ -4,10 +4,14 @@ import math
 
 from flask import Blueprint, jsonify, request
 
+from server.extensions import db
+from app.models import UserFinanceMetrics
+
 
 budget_api = Blueprint("budget_api", __name__)
 
 INPUT_FIELDS = (
+    "user_id",
     "monthly_income",
     "monthly_rent_or_mortgage",
     "monthly_groceries_and_takeout",
@@ -28,6 +32,16 @@ def _read_amount(data, field):
     if not math.isfinite(amount) or amount < 0:
         raise ValueError(f"{field} must be a non-negative number")
     return amount
+
+
+def _read_user_id(data):
+    try:
+        user_id = int(data["user_id"])
+    except (KeyError, TypeError, ValueError):
+        raise ValueError("user_id must be a positive integer")
+    if user_id < 1:
+        raise ValueError("user_id must be a positive integer")
+    return user_id
 
 
 def calculate_budget(data):
@@ -86,8 +100,35 @@ def create_budget():
         return jsonify(error="Missing fields", fields=missing_fields), 400
 
     try:
+        user_id = _read_user_id(data)
         budget = calculate_budget(data)
     except ValueError as error:
         return jsonify(error=str(error)), 400
 
-    return jsonify(budget)
+    metrics = UserFinanceMetrics.query.filter_by(user_id=user_id).first()
+    if metrics is None:
+        metrics = UserFinanceMetrics(user_id=user_id)
+
+    metrics.rent_or_mortgage = _read_amount(data, "monthly_rent_or_mortgage")
+    metrics.takeout_and_groceries = _read_amount(data, "monthly_groceries_and_takeout")
+    metrics.essentials = _read_amount(data, "monthly_essentials")
+    metrics.bills = _read_amount(data, "monthly_bills")
+    metrics.insurance = _read_amount(data, "monthly_insurance")
+    metrics.min_debt_payments = _read_amount(data, "monthly_minimum_debt_payments")
+    metrics.monthly_take_home_income = _read_amount(data, "monthly_income")
+    metrics.total_monthly_needs = budget["total_monthly_needs"]
+    metrics.remaining_after_needs = budget["remaining_after_needs"]
+    metrics.emergency_fund_goal = budget["emergency_fund_goal"]
+    metrics.monthly_emergency_savings = budget["monthly_emergency_savings"]
+    metrics.available_wants_budget = budget["available_wants_budget"]
+    metrics.budget_message = budget["message"]
+
+    try:
+        db.session.add(metrics)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify(error="Budget calculated but could not be saved"), 500
+
+    budget["user_id"] = user_id
+    return jsonify(budget), 201

@@ -68,3 +68,14 @@ class UserFinanceMetrics(db.Model):
     insurance = db.Column(db.Float)
     min_debt_payments = db.Column(db.Float)
     monthly_take_home_income = db.Column(db.Float)
+    total_monthly_needs = db.Column(db.Float)
+    remaining_after_needs = db.Column(db.Float)
+    emergency_fund_goal = db.Column(db.Float)
+    monthly_emergency_savings = db.Column(db.Float)
+    available_wants_budget = db.Column(db.Float)
+    budget_message = db.Column(db.Text)
+    updated_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )

@@ -15,7 +15,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from config import Config
-from extensions import db
+from server.extensions import db
 
 
 def create_app(config_class=Config):

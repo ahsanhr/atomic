@@ -1,11 +1,3 @@
-"""Generate safe, structured financial goals with OpenAI.
-
-The service is deliberately defensive: a missing API key, an exhausted
-account, a malformed model response, or a temporary API failure should not
-prevent onboarding from completing.  In those cases ``generate_goals``
-returns deterministic, locally calculated defaults.
-"""
-
 import json
 import math
 import os
