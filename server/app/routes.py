@@ -51,3 +51,12 @@ Protected routes will require a valid JWT.
 This file should coordinate requests but leave calculations in game_logic.py
 and external API work in integrations.py.
 """
+
+from flask import Blueprint, jsonify
+
+api = Blueprint("api", __name__)
+
+
+@api.get("/health")
+def api_health():
+    return jsonify(status="ok")

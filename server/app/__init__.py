@@ -13,3 +13,27 @@ Planned responsibilities:
 
 No application setup should be implemented yet.
 """
+
+from flask import Flask, jsonify
+from flask_cors import CORS
+
+from config import Config
+from extensions import db
+
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    CORS(app, origins=app.config["FRONTEND_ORIGIN"])
+
+    from app.routes import api
+
+    app.register_blueprint(api, url_prefix="/api")
+
+    @app.get("/health")
+    def health():
+        return jsonify(status="ok")
+
+    return app
