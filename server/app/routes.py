@@ -28,11 +28,6 @@ Quest endpoints:
 
 - POST /api/quests/<quest_key>/complete
   Records a completion and awards XP once per allowed period.
-
-Friend endpoint:
-- POST /api/friends/roll
-  Randomly assigns one friend when the user is level 5 or above.
-
 Plaid endpoints:
 - POST /api/plaid/link-token
   Creates a Plaid Link token.
@@ -47,9 +42,7 @@ Development endpoint:
 - POST /api/dev/run-daily-update
   Manually triggers consistency and vitality updates for the demo.
 
-Protected routes will require a valid JWT.
-This file should coordinate requests but leave calculations in game_logic.py
-and external API work in integrations.py.
+
 """
 
 from flask import Blueprint, jsonify

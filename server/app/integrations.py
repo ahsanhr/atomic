@@ -22,6 +22,5 @@ The demo should support environment flags such as:
 - USE_MOCK_OPENAI
 - USE_MOCK_PLAID
 
-Routes should call functions from this file rather than calling either API
-directly.
+
 """
