@@ -1,7 +1,7 @@
 # Atomic
 
 Atomic is a gamified personal-finance web app in which a user's budgeting and
-saving consistency affects a plant creature and its evolving room.
+saving consistency affects an avatar and its evolving room.
 
 ## Planned stack
 
