@@ -1,3 +1,6 @@
+
+
+
 export default function NavBar() {
   return (
     <nav className="navbar">
@@ -5,15 +8,16 @@ export default function NavBar() {
         <div className="logo-image"></div>
         <h2>Atomic</h2>
       </a>
+      
+      
 
       <div className="navbar-item">
         <a href="/hub">Hub</a>
         <a href="/room">Room</a>
         <a href="/quests">Quests</a>
         <a href="/roadmap">Roadmap</a>
-        <a href="/auth">Sign Up</a>
-        <a href="/login">Login</a>
       </div>
     </nav>
   );
 }
+

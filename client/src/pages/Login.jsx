@@ -21,7 +21,7 @@ export default function Login() {
           </div>
           <div className="auth-actions">
             <button type="submit" className="auth-primary-button">Log In</button>
-            <a href="/signup" className="auth-secondary-button">Create an account</a>
+            <button className="auth-secondary-button">Log In and gain XP!</button>
           </div>
         </form>
       </main>
