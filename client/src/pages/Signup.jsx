@@ -13,6 +13,8 @@ export default function Signup() {
       password,
     });
 
+    window.location.href = "/onboarding";
+
 
   }
 
@@ -44,12 +46,12 @@ export default function Signup() {
 
           <div className="auth-actions">
             <button type="submit" className="auth-primary-button">
-              Sign Up
+              Create Account
             </button>
 
-            <a href="/login" className="auth-secondary-button">
-              I already have an account
-            </a>
+            <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
+              Welcome to Atomic
+            </button>
           </div>
         </form>
       </main>

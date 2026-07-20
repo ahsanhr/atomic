@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node.js
+node_modules/
+client/node_modules/
+
+# Vite
+client/.vite/
+.vite/
+
+# Build output
+dist/
+client/dist/
+
+# macOS
+.DS_Store

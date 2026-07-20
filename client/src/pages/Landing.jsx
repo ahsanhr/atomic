@@ -34,13 +34,14 @@ export default function Landing() {
 
           <div className="hero-actions">
               <a href="/auth" className="primary-button">
-                  Get Started
+              Create Account
               </a>
               <a href="/login" className="secondary-button">
                   I already have an account
               </a>
 
           </div>
+
 
       </div>
 
