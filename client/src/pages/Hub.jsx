@@ -1,14 +1,20 @@
-// Hub.jsx — profile and financial progress overview
-//
-// combines the user's most important information in one screen
-//
-// planned panels:
-//   - profile, current level, XP, and streak
-//   - roadmap preview
-//   - savings or spending chart
-//   - today's quest preview
-//
-// responsibilities:
-//   - fetch dashboard data
-//   - summarize progress without overwhelming the user
-//   - link to the roadmap and full quest pages
+import NavBar from "../components/Navbar";
+
+export default function Hub() {
+  return (
+    <Page title="Your progress" text="Your income, spending, savings, and quests will appear here." />
+  );
+}
+
+function Page({ title, text }) {
+  return (
+    <div className="simple-page">
+      <NavBar />
+      <main className="simple-card">
+        <p className="eyebrow">Financial hub</p>
+        <h1>{title}</h1>
+        <p>{text}</p>
+      </main>
+    </div>
+  );
+}
