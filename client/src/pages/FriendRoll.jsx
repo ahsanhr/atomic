@@ -1,11 +1,14 @@
-// FriendRoll.jsx — one-time friend unlock screen
-//
-// users become eligible to roll for a friend at level 5
-// the selected friend permanently moves into the user's room
-//
-// responsibilities:
-//   - check whether the user is eligible
-//   - prevent rolling below level 5
-//   - prevent a second roll after a friend is assigned
-//   - call the friend-roll endpoint
-//   - reveal the randomly selected friend
+import NavBar from "../components/Navbar";
+
+export default function FriendRoll() {
+  return (
+    <div className="simple-page">
+      <NavBar />
+      <main className="simple-card">
+        <p className="eyebrow">Unlock at level 5</p>
+        <h1>Friend roll</h1>
+        <p>Your future room companion will appear here.</p>
+      </main>
+    </div>
+  );
+}

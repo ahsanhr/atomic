@@ -1,20 +1,18 @@
-// Onboarding.jsx — financial onboarding and generated-goals reveal
-//
-// collects the minimum information needed to create a starting plan
-//
-// user inputs:
-//   - monthly income
-//   - necessary monthly expenses
-//   - current savings
-//
-// flow:
-//   1. user submits their financial information
-//   2. backend generates weekly spending and monthly savings goals
-//   3. generated goals are revealed to the user
-//   4. user continues into the first-day tutorial or room
-//
-// responsibilities:
-//   - manage the onboarding form
-//   - display loading and error states
-//   - show the generated goals
-//   - initialize the user's first room state through the API
+import NavBar from "../components/Navbar";
+
+export default function Onboarding() {
+  return <DemoPage title="Start your plan" text="Your income, expenses, and savings goals will live here." />;
+}
+
+function DemoPage({ title, text }) {
+  return (
+    <div className="simple-page">
+      <NavBar />
+      <main className="simple-card">
+        <p className="eyebrow">Atomic</p>
+        <h1>{title}</h1>
+        <p>{text}</p>
+      </main>
+    </div>
+  );
+}

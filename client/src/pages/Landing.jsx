@@ -7,7 +7,7 @@
 //   - introduce Sprout and the room progression concept
 //   - provide a Get Started button
 //   - route new users to the authentication page
-import NavBar from "../components/navbar";
+import NavBar from "../components/Navbar";
 
 export default function Landing() {
   return (
@@ -61,7 +61,7 @@ export default function Landing() {
           </div>
 
           <div className="feature-image">
-            <img src="IMAGE" alt="Budgeting" />
+          <img src="/images/budgeting.svg" alt="Budgeting illustration" />
           </div>
 
         </section>
@@ -70,7 +70,7 @@ export default function Landing() {
         <section className="feature-section reverse">
 
           <div className="feature-image">
-            <img src="IMAGE" alt="Psychology" />
+            <img src="/images/psychology.svg" alt="People working together" />
           </div>
 
           <div className="feature-text">
@@ -97,7 +97,7 @@ export default function Landing() {
           </div>
 
           <div className="feature-image">
-            <img src="IMAGE" alt="Daily quests" />
+          <img src="/images/quests.svg" alt="Daily quests illustration" />
           </div>
 
         </section>
@@ -106,7 +106,7 @@ export default function Landing() {
         <section className="feature-section reverse">
 
           <div className="feature-image">
-            <img src="IMAGE" alt="Tailored" />
+            <img src="/images/tailored.svg" alt="Personalized plan illustration" />
           </div>
 
           <div className="feature-text">

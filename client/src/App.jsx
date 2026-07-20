@@ -1,26 +1,26 @@
-// App.jsx — top-level route configuration
-//
-// defines the page routes available in the React application
-//
-// planned routes:
-//   /             → landing page
-//   /auth         → signup and login
-//   /onboarding   → financial onboarding
-//   /room         → main room
-//   /hub          → profile and progress overview
-//   /roadmap      → level roadmap
-//   /quests       → daily and weekly quests
-//   /friend       → friend roll
-//
-// responsibilities:
-//   - configure React Router
-//   - connect routes to page components
-//   - apply the shared layout to protected pages
-//   - later support protected-route behavior
-
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Onboarding from "./pages/Onboarding";
+import Room from "./pages/Room";
+import Hub from "./pages/Hub";
+import Roadmap from "./pages/Roadmap";
+import Quests from "./pages/Quests";
+import FriendRoll from "./pages/FriendRoll";
 
 export default function App() {
-  return <Login />;
+  const pages = {
+    "/": Landing,
+    "/auth": Signup,
+    "/signup": Signup,
+    "/login": Login,
+    "/onboarding": Onboarding,
+    "/room": Room,
+    "/hub": Hub,
+    "/roadmap": Roadmap,
+    "/quests": Quests,
+    "/friend": FriendRoll,
+  };
+  const Page = pages[window.location.pathname] || Landing;
+  return <Page />;
 }
-

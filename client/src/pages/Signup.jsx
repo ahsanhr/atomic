@@ -1,5 +1,5 @@
 import { useState } from "react";
-import NavBar from "../components/navbar";
+import NavBar from "../components/Navbar";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
