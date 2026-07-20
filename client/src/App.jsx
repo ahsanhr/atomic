@@ -18,6 +18,9 @@
 //   - apply the shared layout to protected pages
 //   - later support protected-route behavior
 
+import Login from "./pages/Login";
+
 export default function App() {
-  return <main>Atomic</main>;
+  return <Login />;
 }
+

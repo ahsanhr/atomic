@@ -19,3 +19,301 @@ responsibilities:
   - animations for Sprout and level celebrations
   - responsive breakpoints
 */
+
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg: #F1F7ED;
+  --text: #0F1A17;
+  --muted: #647565;
+  --accent: #44A1A0;
+  --accent-dark: #2f7e7e;
+  --border: #dce7d3;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Fredoka", "Segoe UI", sans-serif;
+}
+
+.landing-page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.landing-main {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Hero section */
+
+.hero-section {
+  min-height: calc(100vh - 97px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 110px;
+  padding: 70px 48px;
+}
+
+.hero-image,
+.feature-image {
+  width: 360px;
+  height: 360px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #d9d9d9;
+  border-radius: 18px;
+}
+
+.hero-image img,
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+}
+
+.hero-content h1 {
+  margin: 0 0 18px;
+  font-size: clamp(2.5rem, 4vw, 3.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+
+.hero-subcopy {
+  max-width: 520px;
+  margin: 0 auto 32px;
+  color: var(--text);
+  font-size: 1.2rem;
+  line-height: 1.45;
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.primary-button,
+.secondary-button {
+  width: min(390px, 100%);
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.primary-button {
+  color: #000000;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: 0 7px 8px rgba(0,0,0,.30);
+
+  
+}
+
+
+.secondary-button {
+  color: var(--text);
+  background: transparent;
+  color: #1f1f1f;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: 3px solid #E03616;
+  border-radius: 999px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.28);
+
+}
+
+
+
+/* Scrolling feature sections */
+
+.feature-section {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 130px;
+  padding: 90px 48px;
+}
+
+.feature-section.reverse {
+  flex-direction: row-reverse;
+}
+
+.feature-text {
+  width: 100%;
+  max-width: 430px;
+  text-align: center;
+}
+
+.feature-text h2 {
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.1;
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.feature-text p {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+
+/* Navigation bar */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid rgba(33, 49, 31, 0.08);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--text);   /* Prevent purple */
+}
+
+.logo h2 {
+  margin: 0;
+}
+
+.navbar-item {
+  display: flex;
+  gap: 28px;
+}
+
+.navbar-item a {
+  text-decoration: none;
+  color: var(--text);   /* Prevent purple */
+  font-weight: 600;
+}
+
+/* Signup and login forms */
+.auth-page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.auth-main {
+  min-height: calc(100vh - 97px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 85px 24px;
+}
+
+.auth-card {
+  width: min(355px, 100%);
+  min-height: 355px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 28px 20px;
+  background: var(--bg);
+  border: 2px solid #315f5d;
+  border-radius: 6px;
+  box-shadow: 0 4px 2px rgba(33, 49, 31, 0.45);
+}
+
+.auth-card h1 {
+  margin: 0 0 28px;
+  text-align: center;
+  color: #111;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.auth-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.auth-fields input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 2px solid #315f5d;
+  border-radius: 7px;
+  box-shadow: 0 4px 2px rgba(33, 49, 31, 0.45);
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.auth-fields input::placeholder {
+  color: #777f7a;
+  opacity: 1;
+}
+
+.auth-fields input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 4px 2px rgba(68, 161, 160, 0.35);
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: auto;
+}
+
+.auth-primary-button,
+.auth-secondary-button {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+
+.auth-primary-button {
+  color: #000;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 3px rgba(33, 49, 31, 0.35);
+}
+
+.auth-secondary-button {
+  color: #000;
+  background: var(--bg);
+  border: 2px solid #ef4525;
+  box-shadow: 0 4px 3px rgba(157, 44, 21, 0.45);
+  text-decoration: none;
+}
+
