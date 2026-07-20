@@ -219,13 +219,6 @@ export default function Onboarding() {
 
 
            <div className="onboarding-card-bottom">
-             <button
-               type="button"
-               className="onboarding-edit-button"
-               onClick={() => console.log("Edit amount")}
-             >
-               ✎ edit number
-             </button>
 
 
              <div className="onboarding-navigation">
