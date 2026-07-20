@@ -217,6 +217,17 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Claude Code
-CLAUDE.md
-.claude/
+# Node.js
+node_modules/
+client/node_modules/
+
+# Vite
+client/.vite/
+.vite/
+
+# Build output
+dist/
+client/dist/
+
+# macOS
+.DS_Store
