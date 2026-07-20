@@ -1,8 +1,6 @@
 """
 app package — Flask application setup
 
-This file will contain the Flask application factory.
-
 Planned responsibilities:
 - create and configure the Flask application
 - initialize SQLAlchemy
@@ -11,14 +9,13 @@ Planned responsibilities:
 - register the API routes
 - make it possible to create separate development and test apps
 
-No application setup should be implemented yet.
 """
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 
 from config import Config
-from extensions import db
+from server.extensions import db
 
 
 def create_app(config_class=Config):
@@ -29,8 +26,16 @@ def create_app(config_class=Config):
     CORS(app, origins=app.config["FRONTEND_ORIGIN"])
 
     from app.routes import api
+    from app.auth import auth_bp
+    from app.openai_service import openai_api
+    from app.budget_routes import budget_api
+    from app.plaid_routes import plaid_api
 
     app.register_blueprint(api, url_prefix="/api")
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(openai_api, url_prefix="/api")
+    app.register_blueprint(budget_api, url_prefix="/api")
+    app.register_blueprint(plaid_api)
 
     @app.get("/health")
     def health():
