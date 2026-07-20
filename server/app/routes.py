@@ -3,7 +3,7 @@ routes.py — Flask API endpoints
 
 This file will contain one Blueprint for the minimal backend API.
 
-Authentication endpoints:
+Authentication endpoints:(Done in route.py now)
 - POST /api/signup
   Creates a user account.
 
@@ -47,9 +47,32 @@ Development endpoint:
 
 from flask import Blueprint, jsonify
 
+from app.auth import login_required
+from app.finance import calculate_dashboard
+from app.models import User, UserTransaction
+from app.openai_service import generate_financial_summary
+from server.extensions import db
+
 api = Blueprint("api", __name__)
 
 
 @api.get("/health")
 def api_health():
     return jsonify(status="ok")
+
+
+@api.get("/dashboard")
+@login_required
+def dashboard(user_id):
+    user = db.session.get(User, user_id)
+    if user is None:
+        return jsonify(error="user not found"), 404
+    result = calculate_dashboard(UserTransaction.query.filter_by(user_id=user_id).all())
+    result["ai_summary"] = generate_financial_summary(result)
+    print(
+        "[dashboard] income=${income:.2f} expenses=${expenses:.2f} net=${net:.2f} savings=${savings:.2f}".format(
+            income=result["income"], expenses=result["expenses"], net=result["net_cash_flow"], savings=result["recommended_savings"]
+        ),
+        flush=True,
+    )
+    return jsonify(result)

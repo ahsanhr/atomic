@@ -245,3 +245,45 @@ def api_generate_tip():
         return jsonify(error="income, expenses, and savings are required"), 400
     tip = generate_tip(data["income"], data["expenses"], data["savings"])
     return jsonify(daily_tip=tip)
+
+
+def generate_financial_summary(dashboard):
+    """Explain dashboard totals, with a useful local response when offline."""
+
+    categories = dashboard.get("spending_by_category") or []
+    largest = categories[0]["category"] if categories else "no single category"
+    fallback = {
+        "summary": (
+            "You maintained positive cash flow this month."
+            if dashboard.get("net_cash_flow", 0) >= 0
+            else "Your spending was higher than your income this month."
+        ),
+        "improvement": f"{largest.title()} was your largest spending category.",
+        "encouragement": "Small, consistent changes can help you reach your savings goal.",
+    }
+    if not os.getenv("OPENAI_API_KEY"):
+        return fallback
+    try:
+        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        response = client.chat.completions.create(
+            model=os.getenv("OPENAI_GOALS_MODEL", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": "Return only JSON with summary, improvement, and encouragement strings."},
+                {"role": "user", "content": json.dumps({
+                    "income": dashboard.get("income"),
+                    "expenses": dashboard.get("expenses"),
+                    "net_cash_flow": dashboard.get("net_cash_flow"),
+                    "spending_categories": categories,
+                    "recommended_savings": dashboard.get("recommended_savings"),
+                    "largest_category": largest,
+                })},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.2,
+        )
+        parsed = json.loads(response.choices[0].message.content)
+        if all(isinstance(parsed.get(key), str) and parsed[key].strip() for key in fallback):
+            return {key: parsed[key].strip() for key in fallback}
+    except Exception:
+        pass
+    return fallback

@@ -29,11 +29,13 @@ def create_app(config_class=Config):
     from app.auth import auth_bp
     from app.openai_service import openai_api
     from app.budget_routes import budget_api
+    from app.plaid_routes import plaid_api
 
     app.register_blueprint(api, url_prefix="/api")
     app.register_blueprint(auth_bp)
     app.register_blueprint(openai_api, url_prefix="/api")
     app.register_blueprint(budget_api, url_prefix="/api")
+    app.register_blueprint(plaid_api)
 
     @app.get("/health")
     def health():
