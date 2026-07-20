@@ -7,7 +7,7 @@ export default function Room() {
       <main className="simple-card">
         <p className="eyebrow">Level 1</p>
         <h1>Your room</h1>
-        <p>Your Sprout room will appear here as you build healthy money habits.</p>
+        <p>Your Atomic room will appear here as you build healthy money habits.</p>
       </main>
     </div>
   );
