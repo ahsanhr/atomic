@@ -8,3 +8,18 @@
 //   - provide the page layout used after authentication
 //   - render the active child route
 //   - support responsive desktop and mobile navigation
+
+import { Outlet } from "react-router-dom";
+import NavBar from "./Navbar";
+
+export default function Layout() {
+  return (
+    <div className="app-layout">
+      <NavBar />
+
+      <main className="app-content">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
