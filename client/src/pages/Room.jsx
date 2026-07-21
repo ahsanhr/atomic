@@ -17,8 +17,7 @@ import {
   GizmoViewcube,
   GizmoViewport,
   useHelper,
-  useGLTF,
-  useAnimations
+  useGLTF
 } from "@react-three/drei";
 import { useControls } from "leva";
 import { 
@@ -211,61 +210,6 @@ function CameraLogger() {
   )
 }
 
-function Avatar({currentAction}) {
-  const group = useRef();
-  const { scene, animations } = useGLTF('/avatar.glb');
-  const { actions } = useAnimations(animations, group);
-
-  // 2. Track walking direction (1 for right, -1 for left)
-  const direction = useRef(1);
-  const moveSpeed = 2; // How fast they walk (units per second)
-
-  // Handle Animation Crossfading (same as before)
-  useEffect(() => {
-    const action = actions[currentAction];
-    if (!action) return;
-
-    action.reset().fadeIn(0.5).play();
-
-    return () => {
-      action.fadeOut(0.5);
-    };
-  }, [currentAction, actions]);
-
-  // 3. Handle Physical Movement
-  useFrame((state, delta) => {
-    if (!group.current) return; // Make sure the model has loaded
-
-    // Only move them if the Walk animation is active
-    if (currentAction === 'Walk') {
-      
-      // Move the character along the X axis
-      // We multiply by `delta` to ensure movement speed is consistent regardless of screen refresh rate
-      group.current.position.x += direction.current * moveSpeed * delta;
-
-      // Check boundaries to make them turn around
-      if (group.current.position.x > 3) {
-        // Too far right! Turn left.
-        direction.current = -1;
-        group.current.rotation.y = -Math.PI / 2; // Face left (Three.js uses radians)
-      } 
-      else if (group.current.position.x < -3) {
-        // Too far left! Turn right.
-        direction.current = 1;
-        group.current.rotation.y = Math.PI / 2; // Face right
-      }
-
-    }
-  });
-
-  return (
-    // Set a default rotation so the character starts facing right
-    <group ref={group} dispose={null} >
-      <primitive object={scene} position={[0,0,0]} />
-    </group>
-  );
-}
-
 const PathNode = ({ level, status, alignment }) => {
   const alignmentClass = 
     alignment === 'left' ? "alignLeft" : 
@@ -437,59 +381,19 @@ function BookModal( {closeModal} ) {
   )
 }
 
-
 export default function Room() {
   const [activeModal, setActiveModal] = useState(null);
-  const [level, setLevel] = useState(0);
-
-  const levelUp = () => setLevel(prevLevel => prevLevel + 1)
-  const levelDown = () => setLevel(prevLevel => Math.max(0, prevLevel - 1))
-
-  const [animation, setAnimation] = useState('Idle');
-
-  useEffect(() => {
-    const walkTimer = setInterval(() => {
-      setAnimation('Walk');
-      setTimeout(() => {
-        setAnimation('Idle');
-      }, 10000);
-
-    }, 25000);
-
-    return () => clearInterval(walkTimer);
-  }, []);
-
   return (
-      <div className="simple-page">
-        <NavBar />
-        <div style={{ position: 'absolute', zIndex: 1, padding: '20px' }}>
-        <button 
-          onClick={() => {
-            levelDown();
-            setAnimation('Sad');
-          }}
-        >
-          Level Down
-        </button>
-        <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
-        <button 
-          onClick={() => {
-            levelUp();
-            setAnimation('Happy');
-          }}
-        >
-          Level Up
-        </button>      
-      </div>
-      <div id="canvas-container">
+    <div className="simple-page">
+      <NavBar />
+          <div id="canvas-container">
       <Canvas shadows camera={{position: [-2.86,3.62,4.80], rotation: [-0.39,0.38,0.15]}}>
-        <Avatar currentAction={animation} />
         <Light />
-        {level >= 1 && <AirMattress />}
-        {level >= 6 && <Bookshelf />}
-        {level >= 2 && <Chair />}
-        {level >= 3 && <Desk />}
-        {level >= 4 && <Lamp />}
+        <AirMattress />
+        <Bookshelf />
+        <Chair />
+        <Desk />
+        <Lamp />
         <Selection>
           <EffectComposer autoClear={false}>
             <Outline blur visibleEdgeColor="white" edgeStrength={10} width={1000} />
@@ -498,10 +402,10 @@ export default function Room() {
           <Poster onPosterClick={() => setActiveModal('poster')}/>
           <Book onBookClick={() => setActiveModal('book')}/>
         </Selection>
-        {level >= 8 && <Plant />}
+        <Plant />
         <Environment />
-        {level >= 9 && <Rug />}
-        {level >= 7 && <Window />}
+        <Rug />
+        <Window />
       </Canvas>
 
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
