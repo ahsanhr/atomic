@@ -64,34 +64,6 @@ function Light() {
     </spotLight> 
   );
 }
-// use for example:
-function AnimatedBox() {
-  const boxRef = useRef();
-
-  const { color, speed } = useControls({
-    color: "#00bfff",
-    speed: {
-      value: 0.005,
-      min: 0,
-      max: 0.2,
-      step: 0.001,
-    },
-  });
-
-  useFrame(() => {
-    boxRef.current.rotation.x += speed;
-    boxRef.current.rotation.y += speed;
-    boxRef.current.rotation.z += speed;
-  });
-
-  return (
-    <mesh ref={boxRef} position={[5, 3, 0]} castShadow>
-      <boxGeometry args={[2, 2, 2]} />
-      <axesHelper args={[10]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
-  );
-}
 // actual objects
 function AirMattress(){
   const result = useGLTF("/airmattress.glb");
@@ -209,6 +181,27 @@ function CameraLogger() {
       }} 
     />
   )
+}
+
+function Friend() {
+  const friendRef = useRef()
+  const { scene, animations }  = useGLTF("/friend.glb");
+  const { actions, names } = useAnimations(animations, friendRef);
+
+  useEffect(()=> {
+    const action = actions['FriendIdle'];
+
+    action.reset().fadeIn(0.5).play();
+
+    return () => action.fadeOut(0.5);
+  }, [actions]);
+
+  return (
+    <group ref={friendRef} dispose={null}>
+      <primitive object={scene} position={[-2, 0, -2]} />
+    </group>
+  )
+
 }
 
 function Avatar({currentAction}) {
@@ -492,6 +485,7 @@ export default function Room() {
         {level >= 2 && <Chair />}
         {level >= 3 && <Desk />}
         {level >= 4 && <Lamp />}
+        {level >= 5 && <Friend />}
         <Selection>
           <EffectComposer autoClear={false}>
             <Outline blur visibleEdgeColor="white" edgeStrength={10} width={1000} />
