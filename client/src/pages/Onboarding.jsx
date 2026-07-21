@@ -457,7 +457,13 @@ export default function Onboarding() {
 }
 
 function amountForStep(stepId, dashboard) {
- if (!dashboard) return 0;
+ const demoAmounts = {
+   rent: 1500,
+   insurance: 285,
+   debt: 350,
+ };
+
+ if (!dashboard) return demoAmounts[stepId] || 0;
 
  const categories = dashboard.spending_by_category || [];
  const categoryAmount = (words) => categories
@@ -474,5 +480,5 @@ function amountForStep(stepId, dashboard) {
    takeHomePay: dashboard.income,
  };
 
- return Number(amounts[stepId] || 0);
+ return Number(amounts[stepId] || demoAmounts[stepId] || 0);
 }
