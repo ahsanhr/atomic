@@ -62,11 +62,11 @@ function Tip() {
 
   return (
     <div className="tip-container">
-      <button onClick={loadTip} disabled={isLoading}>
-        {isLoading ? "Generating..." : "Get Financial Tip"}
+      <button onClick={loadTip} disabled={isLoading} children className="infoBanner">
+        {isLoading ? "Generating..." : "Get a financial tip from Atomo!"}
       </button>
       {tip && (
-        <p style={{ marginTop: '15px' }}>{tip}</p>
+        <p>{tip}</p>
       )}
     </div>
   );

@@ -7,9 +7,7 @@ export default function NavBar() {
       <a href="/" className="logo">
         <div className="logo-image"></div>
         <h2>Atomic</h2>
-      </a>
-      <a href="/room">Room</a>
-      
+      </a>      
     </nav>
   );
 }
