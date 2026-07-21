@@ -16,6 +16,7 @@ class User(db.Model):
     quest_completions = db.relationship("UserQuestCompletion", backref="user")
     finance_metrics = db.relationship("UserFinanceMetrics", backref="user", uselist=False)
     plaid_items = db.relationship("PlaidItem", backref="user")
+    notifications = db.relationship("Notification", backref="user", lazy="dynamic")
 
 
 class UserGoal(db.Model):
@@ -72,6 +73,7 @@ class UserRoomState(db.Model):
     current_level = db.Column(db.Integer, default=1)
     current_xp = db.Column(db.Integer, default=0)
     login_streak = db.Column(db.Integer, default=0)
+    last_login_at = db.Column(db.Date, nullable=True)
     vitality_status = db.Column(db.Boolean, default=True)
 
 
@@ -107,3 +109,14 @@ class UserFinanceMetrics(db.Model):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )
+
+
+class Notification(db.Model):
+    __tablename__ = "notifications"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    type = db.Column(db.String(64), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))

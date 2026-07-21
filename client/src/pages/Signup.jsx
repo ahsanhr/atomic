@@ -13,16 +13,20 @@ export default function Signup() {
     event.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       const result = await signUp(username, email, password);
       localStorage.setItem(TOKEN_KEY, result.token);
-      window.location.href = "/hub";
+
+      // After successful signup, go into onboarding flow
+      window.location.href = "/onboarding";
     } catch (requestError) {
       setError(requestError.message);
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="auth-page">
@@ -63,9 +67,9 @@ export default function Signup() {
               {loading ? "Creating account..." : "Sign Up"}
             </button>
 
-            <a href="/login" className="auth-secondary-button">
-              I already have an account
-            </a>
+            <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
+              Welcome to Atomic
+            </button>
           </div>
         </form>
       </main>

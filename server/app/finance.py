@@ -1,7 +1,7 @@
 """Deterministic transaction classification and dashboard calculations."""
 
 from collections import Counter, defaultdict
-from datetime import date
+from datetime import date, timedelta
 
 
 def classify_transaction(transaction):
@@ -157,3 +157,49 @@ def calculate_dashboard(transactions, today=None):
         ],
         "monthly_history": monthly_history,
     }
+
+
+def check_spending_overage(transactions, weekly_spending_goal, today=None):
+    # pure function no db or flask stuff
+    # compares this weeks and todays expenses against the goal
+    # returns a list of dicts for any period thats over budget
+    if not weekly_spending_goal or weekly_spending_goal <= 0:
+        return []
+
+    today = today or date.today()
+    # week starts monday
+    week_start = today - timedelta(days=today.weekday())
+    daily_goal = weekly_spending_goal / 7
+
+    weekly_total = 0.0
+    daily_total = 0.0
+
+    for txn in transactions:
+        if txn.flow_type != "expense":
+            continue
+        txn_date = txn.transaction_date
+        if txn_date is None:
+            continue
+        amount = abs(float(txn.amount or 0))
+        if txn_date >= week_start:
+            weekly_total += amount
+        if txn_date == today:
+            daily_total += amount
+
+    results = []
+    if weekly_total > weekly_spending_goal:
+        results.append({
+            "period": "weekly",
+            "spent": round(weekly_total, 2),
+            "goal": round(weekly_spending_goal, 2),
+            "overage": round(weekly_total - weekly_spending_goal, 2),
+        })
+    if daily_total > daily_goal:
+        results.append({
+            "period": "daily",
+            "spent": round(daily_total, 2),
+            "goal": round(daily_goal, 2),
+            "overage": round(daily_total - daily_goal, 2),
+        })
+
+    return results

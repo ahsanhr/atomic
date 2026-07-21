@@ -7,7 +7,7 @@ from datetime import date
 from flask import Blueprint, current_app, jsonify, request
 
 from app.auth import login_required
-from app.finance import classify_transaction
+from app.finance import check_spending_overage, classify_transaction
 from app.integrations import (
     PlaidError,
     create_plaid_link_token,
@@ -15,7 +15,8 @@ from app.integrations import (
     exchange_plaid_public_token,
     sync_plaid_transactions,
 )
-from app.models import PlaidItem, UserTransaction
+from app.models import PlaidItem, UserGoal, UserTransaction
+from app.notification_routes import maybe_create_overage_notification
 from server.extensions import db
 
 
@@ -124,6 +125,16 @@ def sync_transactions(user_id):
     except (PlaidError, KeyError, ValueError) as error:
         db.session.rollback()
         return jsonify(error=str(error)), 502
+
+    # after syncing check if the user went over their spending goals
+    goal = UserGoal.query.filter_by(user_id=user_id).first()
+    if goal and goal.weekly_spending_goal:
+        today = date.today()
+        all_txns = UserTransaction.query.filter_by(user_id=user_id).all()
+        overages = check_spending_overage(all_txns, goal.weekly_spending_goal, today)
+        if overages:
+            maybe_create_overage_notification(db.session, user_id, overages, today)
+            db.session.commit()
 
     print(
         f"[plaid sync] added={added_count} modified={modified_count} removed={removed_count}",
