@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
+body {
+  margin: 0;
+}
+
+#canvas-container{
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modalBackground {
+  font-family: Fredoka;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalWindow {
+  background-color: #F1F7ED;
+  width: 50vw;
+  height: 80vh;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  color: black;
+  overflow-y: auto;
+}
+
+
+.closeModal {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closeModal button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.infoBanner {
+  box-sizing: border-box;
+  background: #F1F7ED;
+  border: 3px solid #44A1A0;
+  box-shadow: 0px 4px 4px #1D4747;
+  border-radius: 26px;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.pathContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.nodeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.alignLeft {
+  align-self: flex-start;
+  margin-left: 2rem;
+}
+
+.alignCenter {
+  align-self: center;
+}
+
+.alignRight {
+  align-self: flex-end;
+  margin-right: 2rem;
+}
+
+.nodeButton {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.completedNode{
+  background: #44A1A0;
+  box-shadow: 0px 10px 4px #1D4747;
+}
+
+.activeNode {
+  box-sizing: border-box;
+  background: #44A1A0;
+  border: 10px solid #871E0B;
+}
+
+.lockedNode {
+  background: rgba(68, 161, 160, 0.6);
+  border: 3px solid rgba(68, 161, 160, 1);
+}
+
+.levelText {
+  color: #871E0B; 
+  margin-top: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+}
+
+
+.questCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #F1F7ED;
+  border: 3px solid #44A1A0;
+  border-radius: 26px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0px 4px 4px #3a7572;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+}
+
+.questCard:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #3a7572;
+}
+.questCardCompleted {
+  opacity: 0.6;
+  background-color: #e2e8e4;
+  box-shadow: 0 2px 0 #3a7572;
+  transform: translateY(3px);
+}
+.circle {
+  position: absolute;
+  left: 1.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid #871E0B;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+.circleCompleted {
+  background-color: #871E0B;
+}
+.questText {
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0 3rem;
+}
+
+.questTextCompleted {
+  text-decoration: line-through;
+  color: #555;
+}
