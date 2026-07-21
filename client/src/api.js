@@ -65,3 +65,10 @@ export function getQuests() {
 export function completeQuest(questKey) {
   return request(`/quests/${questKey}/complete`, { method: "POST" });
 }
+
+export function getTip(financialData) {
+  return request("/tip", {
+    method: "POST",
+    body: JSON.stringify(financialData),
+  });
+}
