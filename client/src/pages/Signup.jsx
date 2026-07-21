@@ -67,8 +67,8 @@ export default function Signup() {
               {loading ? "Creating account..." : "Sign Up"}
             </button>
 
-            <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
-              Welcome to Atomic
+            <button className="auth-secondary-button" onClick={() => (window.location.href = "/login")}>
+              I already have an account
             </button>
           </div>
         </form>

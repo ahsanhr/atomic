@@ -88,6 +88,14 @@ export default function Hub() {
   return (
     <div className="simple-page">
       <NavBar />
+<<<<<<< HEAD
+      <main className="simple-card">
+        <p className="eyebrow">Financial hub</p>
+        <h1>{title}</h1>
+        <p>{text}</p>
+
+    
+=======
       <main className="dashboard-page">
         <div className="dashboard-heading">
           <div>
@@ -108,6 +116,7 @@ export default function Hub() {
         {message && <p className="status-message">{message}</p>}
         {!dashboard && !error && authenticated && <p className="dashboard-loading">Loading your dashboard...</p>}
         {dashboard && <DashboardCards dashboard={dashboard} />}
+>>>>>>> d4e770e878c48f40fa574476d6c7714c3ab32bee
       </main>
     </div>
   );

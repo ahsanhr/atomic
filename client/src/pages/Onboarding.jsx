@@ -21,6 +21,7 @@
 
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import {
   createPlaidLinkToken,
@@ -438,12 +439,13 @@ export default function Onboarding() {
 
            {selectedGoal && (
              <button
-               type="button"
-               className="onboarding-pill-button onboarding-continue-button"
-               onClick={nextStep}
-             >
-               continue →
-             </button>
+              type="button"
+              className="onboarding-pill-button onboarding-continue-button"
+              onClick={() => {
+                window.location.href = "/room";
+              }}>
+              continue →
+              </button>
            )}
          </section>
        )}
