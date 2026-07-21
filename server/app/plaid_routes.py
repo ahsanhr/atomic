@@ -1,14 +1,17 @@
 """Authenticated Plaid Sandbox routes."""
 
+import os
+import time
 from datetime import date
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from app.auth import login_required
 from app.finance import check_spending_overage, classify_transaction
 from app.integrations import (
     PlaidError,
     create_plaid_link_token,
+    create_sandbox_public_token,
     exchange_plaid_public_token,
     sync_plaid_transactions,
 )
@@ -28,6 +31,26 @@ def create_link_token(user_id):
     except PlaidError as error:
         return jsonify(error=str(error)), 503
     return jsonify(link_token=result["link_token"])
+
+
+@plaid_api.post("/sandbox-token")
+@login_required
+def create_sandbox_token(user_id):
+    existing_items = PlaidItem.query.filter_by(user_id=user_id).all()
+    has_transactions = UserTransaction.query.filter_by(user_id=user_id).first()
+    if existing_items and has_transactions:
+        return jsonify(already_connected=True)
+
+    if existing_items:
+        for item in existing_items:
+            db.session.delete(item)
+        db.session.commit()
+
+    try:
+        result = create_sandbox_public_token()
+    except PlaidError as error:
+        return jsonify(error=str(error)), 503
+    return jsonify(public_token=result["public_token"])
 
 
 @plaid_api.post("/exchange")
@@ -76,6 +99,12 @@ def sync_transactions(user_id):
         for item in items:
             has_more = True
             while has_more:
+                if (
+                    not item.sync_cursor
+                    and os.getenv("PLAID_ENV", "sandbox").lower() == "sandbox"
+                    and not current_app.testing
+                ):
+                    time.sleep(5)
                 result = sync_plaid_transactions(item.access_token, item.sync_cursor)
                 for transaction in result.get("added", []):
                     _save_transaction(user_id, transaction)

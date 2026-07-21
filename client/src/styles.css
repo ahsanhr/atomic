@@ -355,256 +355,130 @@ responsibilities:
   text-decoration: none;
 }
 
-/* onboarding pages */
-.onboarding-page {
-  min-height: 100vh;
-  background: #f1f7ed;
-  color: #0f1f1b;
+.auth-primary-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
-.onboarding-main {
-  min-height: calc(100vh - 120px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 48px 24px;
-}
-
-/* Wide text screens */
-
-.onboarding-wide-screen {
-  width: min(900px, 100%);
-  text-align: center;
-}
-
-.onboarding-wide-screen h1 {
-  margin: 0 0 24px;
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1.1;
-}
-
-.onboarding-wide-screen p {
-  margin: 0 0 30px;
-  font-size: 1.25rem;
-}
-
-/* Amount cards */
-
-.onboarding-card {
-  width: min(420px, 100%);
-  min-height: 470px;
-  padding: 30px 28px 24px;
-  border: 2px solid var(--accent-dark);
-  border-radius: 8px;
-  background: var(--bg);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.onboarding-card-heading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.onboarding-intro,
-.onboarding-subtitle,
-.onboarding-description {
+.form-error {
   margin: 0;
-}
-
-.onboarding-intro {
-  font-size: 0.95rem;
-}
-
-.onboarding-card h1 {
-  margin: 2px 0;
-  max-width: 300px;
-  font-size: 2rem;
-  line-height: 1;
-}
-
-.onboarding-subtitle {
+  color: #b52e1b;
   font-size: 0.9rem;
-}
-
-.onboarding-description {
-  margin-top: 20px;
-  font-size: 0.95rem;
-}
-
-.onboarding-amount {
-  margin: 25px 0;
-  font-size: 2.1rem;
-  font-weight: 700;
-}
-
-.onboarding-card-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Buttons */
-
-.onboarding-pill-button,
-.onboarding-next-button,
-.onboarding-small-button,
-.onboarding-choice-button,
-.onboarding-goal-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.onboarding-pill-button {
-  min-width: 220px;
-  padding: 10px 24px;
-  border: 2px solid var(--accent);
-  border-radius: 999px;
-  background: transparent;
-  font-weight: 600;
-}
-
-.onboarding-wide-button {
-  margin-top: 18px;
-}
-
-.onboarding-edit-button {
-  border: none;
-  background: transparent;
-  color: #e66d4f;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.onboarding-navigation {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.onboarding-small-button,
-.onboarding-next-button {
-  height: 34px;
-  border: 2px solid var(--accent);
-  background: transparent;
-}
-
-.onboarding-small-button {
-  width: 38px;
-  border-radius: 50%;
-}
-
-.onboarding-next-button {
-  min-width: 110px;
-  padding: 0 18px;
-  border-radius: 999px;
-}
-
-.onboarding-yes-no {
-  display: flex;
-  justify-content: center;
-  gap: 70px;
-  margin-top: 28px;
-}
-
-.onboarding-choice-button {
-  min-width: 75px;
-  padding: 8px 18px;
-  border: 2px solid var(--accent);
-  border-radius: 999px;
-  background: transparent;
-}
-
-/* Goal choice */
-
-.onboarding-goal-screen {
-  width: min(900px, 100%);
   text-align: center;
 }
 
-.onboarding-goal-screen h1 {
-  margin-bottom: 35px;
-  font-size: clamp(2rem, 4vw, 3rem);
-}
-
-.onboarding-goal-options {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.onboarding-goal-button {
-  width: 220px;
-  min-height: 100px;
-  padding: 16px;
-  border: 2px solid var(--accent);
-  border-radius: 14px;
-  background: transparent;
+.status-message {
+  margin: 0 0 24px;
+  color: var(--accent-dark);
   font-weight: 600;
 }
 
-.onboarding-goal-button:hover,
-.onboarding-choice-button:hover,
-.onboarding-pill-button:hover,
-.onboarding-next-button:hover {
-  background: rgba(68, 161, 160, 0.12);
+.dashboard-page {
+  width: min(1000px, calc(100% - 48px));
+  margin: 56px auto;
 }
 
-.onboarding-goal-selected {
-  background: rgba(68, 161, 160, 0.2);
+.dashboard-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
 }
 
-.onboarding-continue-button {
-  margin-top: 28px;
-}
-
-/* Mobile */
-
-@media (max-width: 700px) {
-  .onboarding-main {
-    padding: 30px 18px;
-  }
-
-  .onboarding-card {
-    min-height: 420px;
-  }
-
-  .onboarding-yes-no {
-    gap: 25px;
-  }
-
-  .onboarding-goal-options {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .onboarding-goal-button {
-    width: min(320px, 100%);
-  }
-}
-
-/* NOTIFICATION CARD */
-.notification-card {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.notification-card h3 {
-  margin: 0 0 8px;
-  font-size: 1rem;
-  color: #21311f;
-}
-
-.notification-card p {
+.dashboard-heading h1 {
   margin: 0;
-  color: #647565;
-  line-height: 1.4;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.dashboard-button {
+  width: auto;
+  cursor: pointer;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dashboard-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.dashboard-loading {
+  color: var(--muted);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.dashboard-card,
+.dashboard-panel {
+  padding: 24px;
+  background: #ffffff;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(33, 49, 31, 0.08);
+}
+
+.dashboard-card p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.dashboard-card strong {
+  font-size: 1.65rem;
+}
+
+.dashboard-panel {
+  margin-top: 24px;
+}
+
+.dashboard-panel h2 {
+  margin: 0 0 16px;
+}
+
+.dashboard-panel > p {
+  color: var(--muted);
+}
+
+.transaction-list {
+  display: grid;
+  gap: 10px;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    align-items: flex-start;
+    padding: 20px 24px;
+  }
+
+  .navbar-item {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px 16px;
+  }
+
+  .dashboard-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

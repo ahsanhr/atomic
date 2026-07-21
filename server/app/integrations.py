@@ -48,6 +48,25 @@ def create_plaid_link_token(user_id):
     )
 
 
+def create_sandbox_public_token():
+    """Create a Sandbox Item without opening a real bank login screen."""
+
+    if os.getenv("PLAID_ENV", "sandbox").lower() != "sandbox":
+        raise PlaidError("Sandbox connection is only available when PLAID_ENV=sandbox")
+
+    return _plaid_request(
+        "/sandbox/public_token/create",
+        {
+            "institution_id": "ins_109508",
+            "initial_products": ["transactions"],
+            "options": {
+                "override_username": "user_transactions_dynamic",
+                "override_password": "sandbox_password",
+            },
+        },
+    )
+
+
 def exchange_plaid_public_token(public_token):
     """Exchange a temporary Link public token for an access token."""
 

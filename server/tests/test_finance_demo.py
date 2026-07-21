@@ -86,6 +86,31 @@ def test_sync_saves_classification_and_does_not_duplicate(app, client, monkeypat
         assert UserTransaction.query.first().flow_type == "income"
 
 
+def test_sandbox_connection_does_not_create_a_second_item(app, client, monkeypatch):
+    from app import plaid_routes
+
+    with app.app_context():
+        user = User(email="sandbox@example.com", username="sandbox", password="secret")
+        db.session.add(user)
+        db.session.flush()
+        db.session.add(PlaidItem(user_id=user.id, item_id="sandbox-item", access_token="sandbox-access"))
+        db.session.add(UserTransaction(user_id=user.id, plaid_transaction_id="sandbox-tx", amount=100))
+        db.session.commit()
+        token = make_token(user.id)
+
+    monkeypatch.setattr(
+        plaid_routes,
+        "create_sandbox_public_token",
+        lambda: pytest.fail("a second Sandbox Item should not be created"),
+    )
+    response = client.post(
+        "/api/plaid/sandbox-token",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
+    assert response.get_json() == {"already_connected": True}
+
+
 def test_dashboard_endpoint_contains_savings_and_ai_fallback(app, client, monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with app.app_context():
