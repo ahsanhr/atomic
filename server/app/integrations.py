@@ -1,9 +1,10 @@
 """External service wrappers for the backend."""
 
 import os
-
+from dotenv import load_dotenv
 import requests
 
+load_dotenv()
 
 class PlaidError(Exception):
     """An error returned while communicating with Plaid."""
