@@ -450,7 +450,6 @@ export default function Room() {
   useEffect(() => {
     const walkTimer = setInterval(() => {
       setAnimation('Walk');
-      
       setTimeout(() => {
         setAnimation('Idle');
       }, 10000);
@@ -472,9 +471,7 @@ export default function Room() {
         >
           Level Down
         </button>
-
         <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
-
         <button 
           onClick={() => {
             levelUp();
