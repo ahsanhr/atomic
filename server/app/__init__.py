@@ -23,8 +23,13 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
-    CORS(app, origins=app.config["FRONTEND_ORIGIN"])
+    frontend_origin = app.config["FRONTEND_ORIGIN"]
+    allowed_origins = [frontend_origin]
+    if frontend_origin == "http://localhost:5173":
+        allowed_origins.append("http://127.0.0.1:5173")
+    CORS(app, origins=allowed_origins)
     socketio.init_app(app, cors_allowed_origins=app.config["FRONTEND_ORIGIN"])
+
 
     from app.routes import api
     from app.auth import auth_bp

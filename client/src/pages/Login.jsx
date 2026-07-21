@@ -1,12 +1,26 @@
 import { useState } from "react";
 import NavBar from "../components/Navbar";
+import { logIn, TOKEN_KEY } from "../api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const result = await logIn(email, password);
+      localStorage.setItem(TOKEN_KEY, result.token);
+      window.location.href = "/hub";
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -20,8 +34,11 @@ export default function Login() {
             <input type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} required />
           </div>
           <div className="auth-actions">
-            <button type="submit" className="auth-primary-button">Log In</button>
-            <button className="auth-secondary-button">Log In and gain XP!</button>
+            {error && <p className="form-error">{error}</p>}
+            <button type="submit" className="auth-primary-button" disabled={loading}>
+              {loading ? "Logging in..." : "Log In"}
+            </button>
+            <a href="/signup" className="auth-secondary-button">Create an account</a>
           </div>
         </form>
       </main>

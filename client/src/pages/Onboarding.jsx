@@ -20,8 +20,16 @@
 //   - initialize the user's first room state through the API
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/Navbar";
+import {
+  createPlaidLinkToken,
+  createSandboxPublicToken,
+  exchangePlaidToken,
+  getDashboard,
+  syncPlaidTransactions,
+  TOKEN_KEY,
+} from "../api";
 
 
 const onboardingSteps = [
@@ -121,6 +129,15 @@ const onboardingSteps = [
 export default function Onboarding() {
  const [current, setCurrent] = useState(0);
  const [selectedGoal, setSelectedGoal] = useState("");
+ const [dashboard, setDashboard] = useState(null);
+ const [connectionError, setConnectionError] = useState("");
+ const [connecting, setConnecting] = useState(false);
+
+ useEffect(() => {
+   if (localStorage.getItem(TOKEN_KEY)) {
+     getDashboard().then(setDashboard).catch(() => {});
+   }
+ }, []);
 
 
  const step = onboardingSteps[current];
@@ -173,6 +190,59 @@ export default function Onboarding() {
    setCurrent(goalChoiceIndex);
  }
 
+ async function finishConnection(publicToken) {
+   await exchangePlaidToken(publicToken);
+   await syncPlaidTransactions();
+   setDashboard(await getDashboard());
+   setCurrent(1);
+ }
+
+ async function connectSandbox() {
+   setConnectionError("");
+   setConnecting(true);
+   try {
+     const result = await createSandboxPublicToken();
+     if (result.already_connected) {
+       setDashboard(await getDashboard());
+       setCurrent(1);
+       return;
+     }
+     await finishConnection(result.public_token);
+   } catch (error) {
+     setConnectionError(error.message);
+   } finally {
+     setConnecting(false);
+   }
+ }
+
+ async function connectWithPlaid() {
+   setConnectionError("");
+   setConnecting(true);
+   try {
+     if (!window.Plaid) {
+       throw new Error("Plaid Link is still loading. Try again in a moment.");
+     }
+     const { link_token: linkToken } = await createPlaidLinkToken();
+     const handler = window.Plaid.create({
+       token: linkToken,
+       onSuccess: async (publicToken) => {
+         try {
+           await finishConnection(publicToken);
+         } catch (error) {
+           setConnectionError(error.message);
+         } finally {
+           setConnecting(false);
+         }
+       },
+       onExit: () => setConnecting(false),
+     });
+     handler.open();
+   } catch (error) {
+     setConnectionError(error.message);
+     setConnecting(false);
+   }
+ }
+
 
  return (
    <div className="onboarding-page">
@@ -186,13 +256,25 @@ export default function Onboarding() {
            <p>{step.subtitle}</p>
 
 
-           <button
-             type="button"
-             className="onboarding-pill-button onboarding-wide-button"
-             onClick={nextStep}
-           >
-             {step.buttonText}
-           </button>
+           <div className="onboarding-plaid-actions">
+             <button
+               type="button"
+               className="onboarding-pill-button"
+               onClick={connectSandbox}
+               disabled={connecting}
+             >
+               {connecting ? "connecting..." : "use plaid sandbox"}
+             </button>
+             <button
+               type="button"
+               className="onboarding-link-button"
+               onClick={connectWithPlaid}
+               disabled={connecting}
+             >
+               connect with Plaid Link
+             </button>
+           </div>
+           {connectionError && <p className="form-error">{connectionError}</p>}
          </section>
        )}
 
@@ -214,7 +296,10 @@ export default function Onboarding() {
 
 
            <p className="onboarding-amount">
-             ${step.amount.toLocaleString()}
+             ${amountForStep(step.id, dashboard).toLocaleString(undefined, {
+               minimumFractionDigits: 2,
+               maximumFractionDigits: 2,
+             })}
            </p>
 
 
@@ -365,4 +450,25 @@ export default function Onboarding() {
      </main>
    </div>
  );
+}
+
+function amountForStep(stepId, dashboard) {
+ if (!dashboard) return 0;
+
+ const categories = dashboard.spending_by_category || [];
+ const categoryAmount = (words) => categories
+   .filter((item) => words.some((word) => String(item.category || "").toLowerCase().includes(word)))
+   .reduce((total, item) => total + Number(item.amount || 0), 0);
+
+ const amounts = {
+   incomeExpenses: dashboard.expenses,
+   rent: categoryAmount(["rent", "housing"]),
+   insurance: categoryAmount(["insurance"]),
+   groceries: categoryAmount(["food", "drink", "grocery"]),
+   debt: categoryAmount(["debt", "loan"]),
+   essentials: categoryAmount(["utility", "personal", "general service"]),
+   takeHomePay: dashboard.income,
+ };
+
+ return Number(amounts[stepId] || 0);
 }

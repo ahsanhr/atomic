@@ -1,22 +1,32 @@
 import { useState } from "react";
 import NavBar from "../components/Navbar";
+import { signUp, TOKEN_KEY } from "../api";
 
 export default function Signup() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError("");
+    setLoading(true);
 
-    console.log({
-      email,
-      password,
-    });
+    try {
+      const result = await signUp(username, email, password);
+      localStorage.setItem(TOKEN_KEY, result.token);
 
-    window.location.href = "/onboarding";
-
-
+      // After successful signup, go into onboarding flow
+      window.location.href = "/onboarding";
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setLoading(false);
+    }
   }
+
 
   return (
     <div className="auth-page">
@@ -27,6 +37,13 @@ export default function Signup() {
           <h1>Sign Up</h1>
 
           <div className="auth-fields">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              required
+            />
             <input
               type="email"
               placeholder="Email"
@@ -45,8 +62,9 @@ export default function Signup() {
           </div>
 
           <div className="auth-actions">
-            <button type="submit" className="auth-primary-button">
-              Create Account
+            {error && <p className="form-error">{error}</p>}
+            <button type="submit" className="auth-primary-button" disabled={loading}>
+              {loading ? "Creating account..." : "Sign Up"}
             </button>
 
             <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
