@@ -381,19 +381,30 @@ function BookModal( {closeModal} ) {
   )
 }
 
+
 export default function Room() {
   const [activeModal, setActiveModal] = useState(null);
+  const [level, setLevel] = useState(0);
+
+  const levelUp = () => setLevel(prevLevel => prevLevel + 1)
+  const levelDown = () => setLevel(prevLevel => Math.max(0, prevLevel - 1))
+
   return (
     <div className="simple-page">
       <NavBar />
-          <div id="canvas-container">
+      <div style={{ position: 'absolute', zIndex: 1, padding: '20px' }}>
+        <button onClick={levelDown}>Level Down</button>
+        <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
+        <button onClick={levelUp}>Level Up</button>
+      </div>
+      <div id="canvas-container">
       <Canvas shadows camera={{position: [-2.86,3.62,4.80], rotation: [-0.39,0.38,0.15]}}>
         <Light />
-        <AirMattress />
-        <Bookshelf />
-        <Chair />
-        <Desk />
-        <Lamp />
+        {level >= 1 && <AirMattress />}
+        {level >= 6 && <Bookshelf />}
+        {level >= 2 && <Chair />}
+        {level >= 3 && <Desk />}
+        {level >= 4 && <Lamp />}
         <Selection>
           <EffectComposer autoClear={false}>
             <Outline blur visibleEdgeColor="white" edgeStrength={10} width={1000} />
@@ -402,10 +413,10 @@ export default function Room() {
           <Poster onPosterClick={() => setActiveModal('poster')}/>
           <Book onBookClick={() => setActiveModal('book')}/>
         </Selection>
-        <Plant />
+        {level >= 8 && <Plant />}
         <Environment />
-        <Rug />
-        <Window />
+        {level >= 9 && <Rug />}
+        {level >= 7 && <Window />}
       </Canvas>
 
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
