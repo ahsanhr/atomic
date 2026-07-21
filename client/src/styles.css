@@ -367,6 +367,221 @@ responsibilities:
   text-align: center;
 }
 
+/* Onboarding */
+.onboarding-page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.onboarding-main {
+  min-height: calc(100vh - 97px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px 80px;
+}
+
+.onboarding-wide-screen,
+.onboarding-goal-screen {
+  width: min(760px, 100%);
+  text-align: center;
+}
+
+.onboarding-wide-screen h1,
+.onboarding-goal-screen h1 {
+  max-width: 720px;
+  margin: 0 auto 18px;
+  color: var(--text);
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  line-height: 1.08;
+  text-transform: lowercase;
+}
+
+.onboarding-wide-screen > p {
+  margin: 0 auto 36px;
+  color: var(--muted);
+  font-size: 1.25rem;
+}
+
+.onboarding-pill-button,
+.onboarding-choice-button,
+.onboarding-goal-button,
+.onboarding-next-button,
+.onboarding-small-button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.onboarding-pill-button {
+  padding: 14px 34px;
+  color: #111;
+  background: var(--accent);
+  border: 2px solid var(--accent-dark);
+  border-radius: 999px;
+  box-shadow: 0 5px 0 rgba(47, 126, 126, 0.3);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.onboarding-pill-button:disabled,
+.onboarding-link-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.onboarding-plaid-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.onboarding-link-button {
+  padding: 12px 18px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.onboarding-card {
+  width: min(640px, 100%);
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 52px 32px;
+  text-align: center;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 26px;
+  box-shadow: 0 12px 26px rgba(33, 49, 31, 0.12);
+}
+
+.onboarding-card-heading p,
+.onboarding-card-heading h1 {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.onboarding-intro,
+.onboarding-subtitle,
+.onboarding-description {
+  color: var(--muted);
+}
+
+.onboarding-intro {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.onboarding-card h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+  text-transform: lowercase;
+}
+
+.onboarding-subtitle,
+.onboarding-description {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.onboarding-description {
+  font-size: 0.95rem;
+}
+
+.onboarding-amount {
+  margin: 34px 0;
+  color: var(--accent-dark);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 700;
+}
+
+.onboarding-card-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.onboarding-navigation {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.onboarding-small-button {
+  width: 46px;
+  height: 46px;
+  color: var(--text);
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  font-size: 1.25rem;
+}
+
+.onboarding-next-button {
+  padding: 11px 24px;
+  color: #111;
+  background: var(--accent);
+  border: 2px solid var(--accent-dark);
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.onboarding-yes-no {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.onboarding-choice-button {
+  min-width: 130px;
+  padding: 14px 28px;
+  color: var(--text);
+  background: #fff;
+  border: 2px solid var(--accent-dark);
+  border-radius: 999px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.onboarding-goal-options {
+  display: grid;
+  gap: 14px;
+  margin: 32px auto;
+}
+
+.onboarding-goal-button {
+  width: 100%;
+  padding: 17px 22px;
+  color: var(--text);
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 0 rgba(33, 49, 31, 0.08);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.onboarding-goal-button:hover,
+.onboarding-goal-selected {
+  background: #e0f1e7;
+  border-color: var(--accent-dark);
+}
+
+.onboarding-continue-button {
+  margin-top: 4px;
+}
+
 .status-message {
   margin: 0 0 24px;
   color: var(--accent-dark);
@@ -480,5 +695,23 @@ responsibilities:
 
   .dashboard-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .onboarding-main {
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .onboarding-card {
+    min-height: 390px;
+    padding: 36px 24px 26px;
+  }
+
+  .onboarding-yes-no {
+    gap: 10px;
+  }
+
+  .onboarding-choice-button {
+    min-width: 110px;
   }
 }
