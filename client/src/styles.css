@@ -354,3 +354,131 @@ responsibilities:
   box-shadow: 0 4px 3px rgba(157, 44, 21, 0.45);
   text-decoration: none;
 }
+
+.auth-primary-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.form-error {
+  margin: 0;
+  color: #b52e1b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.status-message {
+  margin: 0 0 24px;
+  color: var(--accent-dark);
+  font-weight: 600;
+}
+
+.dashboard-page {
+  width: min(1000px, calc(100% - 48px));
+  margin: 56px auto;
+}
+
+.dashboard-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.dashboard-heading h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.dashboard-button {
+  width: auto;
+  cursor: pointer;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dashboard-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.dashboard-loading {
+  color: var(--muted);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.dashboard-card,
+.dashboard-panel {
+  padding: 24px;
+  background: #ffffff;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(33, 49, 31, 0.08);
+}
+
+.dashboard-card p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.dashboard-card strong {
+  font-size: 1.65rem;
+}
+
+.dashboard-panel {
+  margin-top: 24px;
+}
+
+.dashboard-panel h2 {
+  margin: 0 0 16px;
+}
+
+.dashboard-panel > p {
+  color: var(--muted);
+}
+
+.transaction-list {
+  display: grid;
+  gap: 10px;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    align-items: flex-start;
+    padding: 20px 24px;
+  }
+
+  .navbar-item {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px 16px;
+  }
+
+  .dashboard-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
