@@ -35,6 +35,43 @@ import {
   Select 
 } from '@react-three/postprocessing';
 import { createPortal } from 'react-dom';
+
+import { getTip } from "../api";
+
+function Tip() {
+  const [tip, setTip] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function loadTip() {
+    try {
+      const data = {
+        income: 5000,
+        expenses: 3000,
+        savings: 500
+      };
+      
+      const response = await getTip(data);
+      
+      setTip(response.daily_tip); 
+      
+    } catch (error) {
+      console.log(error.message);
+      setTip("Failed to load tip.");
+    } 
+  }
+
+  return (
+    <div className="tip-container">
+      <button onClick={loadTip} disabled={isLoading} children className="infoBanner">
+        {isLoading ? "Generating..." : "Get a financial tip from Atomo!"}
+      </button>
+      {tip && (
+        <p>{tip}</p>
+      )}
+    </div>
+  );
+}
+
 function Light() {
   const light = useRef();
   const shadow = useRef();
@@ -62,34 +99,6 @@ function Light() {
     >
       <orthographicCamera attach='shadow-camera' ref={shadow} top={8} right={8} />
     </spotLight> 
-  );
-}
-// use for example:
-function AnimatedBox() {
-  const boxRef = useRef();
-
-  const { color, speed } = useControls({
-    color: "#00bfff",
-    speed: {
-      value: 0.005,
-      min: 0,
-      max: 0.2,
-      step: 0.001,
-    },
-  });
-
-  useFrame(() => {
-    boxRef.current.rotation.x += speed;
-    boxRef.current.rotation.y += speed;
-    boxRef.current.rotation.z += speed;
-  });
-
-  return (
-    <mesh ref={boxRef} position={[5, 3, 0]} castShadow>
-      <boxGeometry args={[2, 2, 2]} />
-      <axesHelper args={[10]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
   );
 }
 // actual objects
@@ -211,58 +220,129 @@ function CameraLogger() {
   )
 }
 
-function Avatar({currentAction}) {
+function Friend() {
+  const friendRef = useRef()
+  const { scene, animations }  = useGLTF("/friend.glb");
+  const { actions, names } = useAnimations(animations, friendRef);
+
+  useEffect(()=> {
+    const action = actions['FriendIdle'];
+
+    action.reset().fadeIn(0.5).play();
+
+    return () => action.fadeOut(0.5);
+  }, [actions]);
+
+  return (
+    <group ref={friendRef} dispose={null}>
+      <primitive object={scene} position={[-2, 0, -2]} />
+    </group>
+  )
+
+}
+
+function AvatarModal( {closeModal} ) {
+  return( 
+    <div className="modalBackground">
+      <div className="modalWindow">
+        <div className="closeModal">
+          <button 
+            onClick={() => {
+              closeModal(null);
+            }}
+          >
+            [ X ]
+          </button>
+        </div>
+            <Tip />
+      </div>
+    </div>
+  )
+
+}
+
+function Avatar({currentAction, onAvatarClick}) {
   const group = useRef();
+
+  const [hovered, setHovered] = useState(false);
+
   const { scene, animations } = useGLTF('/avatar.glb');
   const { actions } = useAnimations(animations, group);
+  
 
-  // 2. Track walking direction (1 for right, -1 for left)
-  const direction = useRef(1);
-  const moveSpeed = 2; // How fast they walk (units per second)
+  const walkTimer = useRef(0);
+  const moveSpeed = 2; 
+  const startZ = 0;
 
-  // Handle Animation Crossfading (same as before)
   useEffect(() => {
     const action = actions[currentAction];
     if (!action) return;
 
     action.reset().fadeIn(0.5).play();
 
-    return () => {
-      action.fadeOut(0.5);
-    };
+    // forces Happy and Sad to play exactly one time and stop
+    if (currentAction === 'Happy' || currentAction === 'Sad') {
+      action.setLoop(THREE.LoopOnce, 1);
+      action.clampWhenFinished = true; 
+    } else {
+      // Walk and Idle should loop normally
+      action.setLoop(THREE.LoopRepeat, Infinity);
+    }
+
+    return () => action.fadeOut(0.5);
   }, [currentAction, actions]);
 
-  // 3. Handle Physical Movement
   useFrame((state, delta) => {
-    if (!group.current) return; // Make sure the model has loaded
+    if (!group.current) return;
 
-    // Only move them if the Walk animation is active
     if (currentAction === 'Walk') {
+      // Add the time passed since last frame
+      walkTimer.current += delta;
       
-      // Move the character along the X axis
-      // We multiply by `delta` to ensure movement speed is consistent regardless of screen refresh rate
-      group.current.position.x += direction.current * moveSpeed * delta;
-
-      // Check boundaries to make them turn around
-      if (group.current.position.x > 3) {
-        // Too far right! Turn left.
-        direction.current = -1;
-        group.current.rotation.y = -Math.PI / 2; // Face left (Three.js uses radians)
+      // First 1.5 seconds: Walk forward on Z
+      if (walkTimer.current <= 1) {
+        group.current.position.z += moveSpeed * delta;
+        group.current.rotation.y = 0; // Face forward
       } 
-      else if (group.current.position.x < -3) {
-        // Too far left! Turn right.
-        direction.current = 1;
-        group.current.rotation.y = Math.PI / 2; // Face right
+      // Next 1.5 seconds: Turn around and walk back
+      else if (walkTimer.current <= 2) {
+        group.current.position.z -= moveSpeed * delta;
+        group.current.rotation.y = Math.PI; // Turn 180 degrees (Math.PI is half a circle)
       }
-
+    } else {
+      // Not walking? Reset everything so he's ready for the next 10-second trigger
+      walkTimer.current = 0;
+      group.current.position.z = startZ; // Snap exactly to start to prevent drifting
+      group.current.rotation.y = 0;      // Face forward for Idle/Happy/Sad
     }
   });
 
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.transparent = false;
+        child.material.depthWrite = true;
+      }
+    });
+  }, [scene]);
+
   return (
-    // Set a default rotation so the character starts facing right
-    <group ref={group} dispose={null} >
-      <primitive object={scene} position={[0,0,0]} />
-    </group>
+    <Select enabled={hovered}>
+      <group ref={group} dispose={null}>
+        <primitive 
+        object={scene} 
+                onClick={(e) => {
+          e.stopPropagation();
+          onAvatarClick();
+        }}
+        onPointerEnter={(e) => {
+          e.stopPropagation(); 
+          setHovered(true);
+        }}
+        onPointerLeave={() => setHovered(false)} 
+        />
+      </group>
+    </Select>
   );
 }
 
@@ -447,56 +527,55 @@ export default function Room() {
 
   const [animation, setAnimation] = useState('Idle');
 
+  const playReaction = (animName) => {
+    setAnimation(animName);
+  
+    setTimeout(() => {
+      setAnimation('Idle');
+    }, 7000); 
+  };
+
   useEffect(() => {
     const walkTimer = setInterval(() => {
       setAnimation('Walk');
       setTimeout(() => {
         setAnimation('Idle');
-      }, 10000);
+      }, 2000);
 
-    }, 25000);
+    }, 10000);
 
     return () => clearInterval(walkTimer);
   }, []);
-
+  
   return (
       <div className="simple-page">
         <NavBar />
         <div style={{ position: 'absolute', zIndex: 1, padding: '20px' }}>
-        <button 
-          onClick={() => {
-            levelDown();
-            setAnimation('Sad');
-          }}
-        >
-          Level Down
-        </button>
-        <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
-        <button 
-          onClick={() => {
-            levelUp();
-            setAnimation('Happy');
-          }}
-        >
-          Level Up
-        </button>      
+          <button onClick={() => { levelDown(); playReaction('Sad'); }}>
+            Level Down
+          </button>        
+          <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
+          <button onClick={() => { levelUp(); playReaction('Happy'); }}>
+            Level Up
+          </button>
       </div>
       <div id="canvas-container">
       <Canvas shadows camera={{position: [-2.86,3.62,4.80], rotation: [-0.39,0.38,0.15]}}>
-        <Avatar currentAction={animation} />
         <Light />
         {level >= 1 && <AirMattress />}
         {level >= 6 && <Bookshelf />}
         {level >= 2 && <Chair />}
         {level >= 3 && <Desk />}
         {level >= 4 && <Lamp />}
+        {level >= 5 && <Friend />}
         <Selection>
-          <EffectComposer autoClear={false}>
+          <EffectComposer autoClear={false} depthBuffer={true}>
             <Outline blur visibleEdgeColor="white" edgeStrength={10} width={1000} />
           </EffectComposer>
           <Laptop onLaptopClick={() => setActiveModal('laptop')}/>
           <Poster onPosterClick={() => setActiveModal('poster')}/>
           <Book onBookClick={() => setActiveModal('book')}/>
+          <Avatar onAvatarClick={() => setActiveModal('tip')} currentAction={animation} />
         </Selection>
         {level >= 8 && <Plant />}
         <Environment />
@@ -507,7 +586,7 @@ export default function Room() {
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
       {activeModal === 'laptop' && <LaptopModal closeModal={setActiveModal} />}
       {activeModal === 'book' && <BookModal closeModal={setActiveModal} />}
-
+      {activeModal === 'tip' && <AvatarModal closeModal={setActiveModal} />}
     </div>
 
     </div>
