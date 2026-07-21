@@ -105,7 +105,15 @@ def sync_transactions(user_id):
                     and not current_app.testing
                 ):
                     time.sleep(5)
-                result = sync_plaid_transactions(item.access_token, item.sync_cursor)
+                try:
+                    result = sync_plaid_transactions(item.access_token, item.sync_cursor)
+                except PlaidError as plaid_err:
+                    if "TRANSACTIONS_SYNC_MUTATION_DURING_PAGINATION" in str(plaid_err):
+                        # data changed mid-sync so reset cursor and start over
+                        item.sync_cursor = None
+                        has_more = True
+                        continue
+                    raise
                 for transaction in result.get("added", []):
                     _save_transaction(user_id, transaction)
                     added_count += 1
