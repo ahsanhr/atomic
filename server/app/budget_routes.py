@@ -1,11 +1,13 @@
 """Simple budget calculation endpoint."""
 
 import math
+from datetime import date
 
 from flask import Blueprint, jsonify, request
 
 from server.extensions import db
-from app.models import UserFinanceMetrics
+from app.models import UserFinanceMetrics, UserRoomState
+from app.quest_helpers import complete_quest
 
 
 budget_api = Blueprint("budget_api", __name__)
@@ -129,6 +131,15 @@ def create_budget():
     except Exception:
         db.session.rollback()
         return jsonify(error="Budget calculated but could not be saved"), 500
+
+    # auto-complete the savings goal quest since they just submitted their budget
+    try:
+        room_state = UserRoomState.query.filter_by(user_id=user_id).first()
+        if room_state:
+            complete_quest(db.session, room_state, user_id, "input_savings_goal", date.today())
+            db.session.commit()
+    except Exception:
+        pass
 
     budget["user_id"] = user_id
     return jsonify(budget), 201

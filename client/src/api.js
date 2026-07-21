@@ -54,12 +54,21 @@ export function getDashboard() {
   return request("/dashboard");
 }
 
-export function getTip() {
+export function getRoom() {
+  return request("/room");
+}
+
+export function getQuests() {
+  return request("/quests");
+}
+
+export function completeQuest(questKey) {
+  return request(`/quests/${questKey}/complete`, { method: "POST" });
+}
+
+export function getTip(financialData) {
   return request("/tip", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(financialData)
+    body: JSON.stringify(financialData),
   });
 }

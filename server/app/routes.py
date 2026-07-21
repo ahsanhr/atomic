@@ -51,7 +51,8 @@ from flask import Blueprint, jsonify
 
 from app.auth import login_required
 from app.finance import calculate_dashboard, check_spending_overage
-from app.models import Notification, User, UserGoal, UserTransaction
+from app.game_logic import FURNITURE_UNLOCK, XP_THRESHOLDS, calculate_level
+from app.models import Notification, User, UserGoal, UserRoomState, UserTransaction
 from app.notification_routes import maybe_create_overage_notification
 from app.openai_service import generate_financial_summary
 from server.extensions import db
@@ -62,6 +63,28 @@ api = Blueprint("api", __name__)
 @api.get("/health")
 def api_health():
     return jsonify(status="ok")
+
+
+@api.get("/room")
+@login_required
+def get_room(user_id):
+    room_state = UserRoomState.query.filter_by(user_id=user_id).first()
+    if room_state is None:
+        room_state = UserRoomState(user_id=user_id)
+        db.session.add(room_state)
+        db.session.commit()
+
+    xp = room_state.current_xp or 0
+    level = calculate_level(xp)
+    next_xp = XP_THRESHOLDS[level] if level < 10 else None
+
+    return jsonify(
+        level=level,
+        xp=xp,
+        next_level_xp=next_xp,
+        login_streak=room_state.login_streak or 0,
+        friend_unlocked=level >= 5,
+    )
 
 
 @api.get("/dashboard")

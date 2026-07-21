@@ -8,7 +8,8 @@ from flask import Blueprint, jsonify, request
 
 from server.extensions import db
 from app.models import Notification, User, UserRoomState
-from app.game_logic import streak_notification_content, update_login_streak
+from app.game_logic import award_xp, calculate_login_xp, streak_notification_content, update_login_streak
+from app.quest_helpers import check_spending_quest, check_weekly_login_quest, complete_quest, track_login_day
 from app.socket_events import emit_notification
 
 
@@ -121,6 +122,17 @@ def login():
                 "message": notif.message,
                 "is_read": False,
             })
+
+        # award login xp and run auto quest checks
+        login_xp = calculate_login_xp(new_streak)
+        new_xp, new_level, _ = award_xp(room_state.current_xp or 0, login_xp)
+        room_state.current_xp = new_xp
+        room_state.current_level = new_level
+
+        track_login_day(db.session, user.id, today)
+        complete_quest(db.session, room_state, user.id, "view_finance_tip", today)
+        check_spending_quest(db.session, room_state, user.id, today)
+        check_weekly_login_quest(db.session, room_state, user.id, today)
 
         db.session.commit()
 
