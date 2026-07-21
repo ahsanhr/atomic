@@ -35,6 +35,43 @@ import {
   Select 
 } from '@react-three/postprocessing';
 import { createPortal } from 'react-dom';
+
+import { getTip } from "../api";
+
+function Tip() {
+  const [tip, setTip] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function loadTip() {
+    try {
+      const data = {
+        income: 5000,
+        expenses: 3000,
+        savings: 500
+      };
+      
+      const response = await getTip(data);
+      
+      setTip(response.daily_tip); 
+      
+    } catch (error) {
+      console.log(error.message);
+      setTip("Failed to load tip.");
+    } 
+  }
+
+  return (
+    <div className="tip-container">
+      <button onClick={loadTip} disabled={isLoading}>
+        {isLoading ? "Generating..." : "Get Financial Tip"}
+      </button>
+      {tip && (
+        <p style={{ marginTop: '15px' }}>{tip}</p>
+      )}
+    </div>
+  );
+}
+
 function Light() {
   const light = useRef();
   const shadow = useRef();
@@ -204,10 +241,34 @@ function Friend() {
 
 }
 
-function Avatar({currentAction}) {
+function AvatarModal( {closeModal} ) {
+  return( 
+    <div className="modalBackground">
+      <div className="modalWindow">
+        <div className="closeModal">
+          <button 
+            onClick={() => {
+              closeModal(null);
+            }}
+          >
+            [ X ]
+          </button>
+        </div>
+            <Tip />
+      </div>
+    </div>
+  )
+
+}
+
+function Avatar({currentAction, onAvatarClick}) {
   const group = useRef();
+
+  const [hovered, setHovered] = useState(false);
+
   const { scene, animations } = useGLTF('/avatar.glb');
   const { actions } = useAnimations(animations, group);
+  
 
   const walkTimer = useRef(0);
   const moveSpeed = 2; 
@@ -256,10 +317,32 @@ function Avatar({currentAction}) {
     }
   });
 
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.transparent = false;
+        child.material.depthWrite = true;
+      }
+    });
+  }, [scene]);
+
   return (
-    <group ref={group} dispose={null}>
-      <primitive object={scene} />
-    </group>
+    <Select enabled={hovered}>
+      <group ref={group} dispose={null}>
+        <primitive 
+        object={scene} 
+                onClick={(e) => {
+          e.stopPropagation();
+          onAvatarClick();
+        }}
+        onPointerEnter={(e) => {
+          e.stopPropagation(); 
+          setHovered(true);
+        }}
+        onPointerLeave={() => setHovered(false)} 
+        />
+      </group>
+    </Select>
   );
 }
 
@@ -478,7 +561,6 @@ export default function Room() {
       </div>
       <div id="canvas-container">
       <Canvas shadows camera={{position: [-2.86,3.62,4.80], rotation: [-0.39,0.38,0.15]}}>
-        <Avatar currentAction={animation} />
         <Light />
         {level >= 1 && <AirMattress />}
         {level >= 6 && <Bookshelf />}
@@ -487,12 +569,13 @@ export default function Room() {
         {level >= 4 && <Lamp />}
         {level >= 5 && <Friend />}
         <Selection>
-          <EffectComposer autoClear={false}>
+          <EffectComposer autoClear={false} depthBuffer={true}>
             <Outline blur visibleEdgeColor="white" edgeStrength={10} width={1000} />
           </EffectComposer>
           <Laptop onLaptopClick={() => setActiveModal('laptop')}/>
           <Poster onPosterClick={() => setActiveModal('poster')}/>
           <Book onBookClick={() => setActiveModal('book')}/>
+          <Avatar onAvatarClick={() => setActiveModal('tip')} currentAction={animation} />
         </Selection>
         {level >= 8 && <Plant />}
         <Environment />
@@ -503,7 +586,7 @@ export default function Room() {
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
       {activeModal === 'laptop' && <LaptopModal closeModal={setActiveModal} />}
       {activeModal === 'book' && <BookModal closeModal={setActiveModal} />}
-
+      {activeModal === 'tip' && <AvatarModal closeModal={setActiveModal} />}
     </div>
 
     </div>

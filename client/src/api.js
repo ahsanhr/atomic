@@ -53,3 +53,13 @@ export function syncPlaidTransactions() {
 export function getDashboard() {
   return request("/dashboard");
 }
+
+export function getTip() {
+  return request("/tip", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(financialData)
+  });
+}
