@@ -587,3 +587,24 @@ responsibilities:
     width: min(320px, 100%);
   }
 }
+
+/* NOTIFICATION CARD */
+.notification-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.notification-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #21311f;
+}
+
+.notification-card p {
+  margin: 0;
+  color: #647565;
+  line-height: 1.4;
+}
