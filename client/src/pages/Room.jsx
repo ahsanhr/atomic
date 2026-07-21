@@ -243,12 +243,18 @@ function Friend() {
 
 }
 
-function AvatarModal( {closeModal} ) {
-  return( 
+function AvatarModal({ closeModal, onLevelChange }) {
+  useEffect(() => {
+    completeQuest('view_finance_tip')
+      .then(result => { if (result.leveled_up && onLevelChange) onLevelChange(); })
+      .catch(() => {});
+  }, []);
+
+  return(
     <div className="modalBackground">
       <div className="modalWindow">
         <div className="closeModal">
-          <button 
+          <button
             onClick={() => {
               closeModal(null);
             }}
@@ -256,11 +262,10 @@ function AvatarModal( {closeModal} ) {
             [ X ]
           </button>
         </div>
-            <Tip />
+        <Tip />
       </div>
     </div>
-  )
-
+  );
 }
 
 function Avatar({currentAction, onAvatarClick}) {
@@ -422,12 +427,18 @@ function PosterModal({ closeModal }) {
   );
 }
 
-function LaptopModal( {closeModal} ) {
-  return( 
+function LaptopModal({ closeModal, onLevelChange }) {
+  useEffect(() => {
+    completeQuest('check_daily_transactions')
+      .then(result => { if (result.leveled_up && onLevelChange) onLevelChange(); })
+      .catch(() => {});
+  }, []);
+
+  return(
     <div className="modalBackground">
       <div className="modalWindow">
         <div className="closeModal">
-          <button 
+          <button
             onClick={() => {
               closeModal(null);
             }}
@@ -613,9 +624,9 @@ export default function Room() {
       </Canvas>
 
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
-      {activeModal === 'laptop' && <LaptopModal closeModal={setActiveModal} />}
+      {activeModal === 'laptop' && <LaptopModal closeModal={setActiveModal} onLevelChange={refreshLevel} />}
       {activeModal === 'book' && <BookModal closeModal={setActiveModal} onLevelChange={refreshLevel} />}
-      {activeModal === 'tip' && <AvatarModal closeModal={setActiveModal} />}
+      {activeModal === 'tip' && <AvatarModal closeModal={setActiveModal} onLevelChange={refreshLevel} />}
     </div>
 
     </div>

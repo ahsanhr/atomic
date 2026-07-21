@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import {
+  completeQuest,
   createPlaidLinkToken,
   createSandboxPublicToken,
   exchangePlaidToken,
@@ -442,6 +443,7 @@ export default function Onboarding() {
               type="button"
               className="onboarding-pill-button onboarding-continue-button"
               onClick={() => {
+                completeQuest('input_savings_goal').catch(() => {});
                 window.location.href = "/room";
               }}>
               continue →

@@ -57,19 +57,19 @@ QUESTS = {
         "label": "check your daily transactions!",
         "period": "daily",
         "xp": 50,
-        "auto": True,
+        "auto": False,
     },
     "view_finance_tip": {
         "label": "look at the daily finance tip!",
         "period": "daily",
         "xp": 20,
-        "auto": True,
+        "auto": False,
     },
     "input_savings_goal": {
         "label": "input a savings goal!",
         "period": "weekly",
         "xp": 100,
-        "auto": True,
+        "auto": False,
     },
     "login_7_times": {
         "label": "login 7 times this week!",
