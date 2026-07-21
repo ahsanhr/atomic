@@ -87,7 +87,6 @@ export default function Hub() {
 
   return (
     <div className="simple-page">
-      <NavBar />
       <main className="dashboard-page">
         <div className="dashboard-heading">
           <div>
