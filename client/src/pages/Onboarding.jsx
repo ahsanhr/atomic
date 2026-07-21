@@ -378,13 +378,11 @@ export default function Onboarding() {
            <h1>{step.title}</h1>
 
 
-           <button
-             type="button"
-             className="onboarding-pill-button onboarding-wide-button"
-             onClick={goToGoalChoices}
-           >
-             {step.buttonText}
-           </button>
+           <button type="button" className="onboarding-pill-button onboarding-wide-button"
+            onClick={() => { window.location.href = "/room";}} >
+            {step.buttonText}
+          </button>
+
          </section>
        )}
 
