@@ -335,9 +335,9 @@ img, video, canvas, svg { max-width:100%; max-height:100%; }
 /* ================================================
    SLIDE 5 — TECH STACK
 ================================================ */
-.s5-body  { position:absolute; inset:72px 0 0 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px 140px 48px; gap:44px; }
-.s5-grid  { display:grid; grid-template-columns:repeat(5,1fr); gap:26px; width:100%; }
-.tech-card{ background:var(--surface); border:1.5px solid var(--dim); border-radius:24px; padding:44px 24px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; transition:transform .5s var(--spring),box-shadow .5s ease,border-color .3s; }
+.s5-body  { position:absolute; inset:72px 0 0 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 140px 32px; gap:28px; }
+.s5-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:26px; width:100%; }
+.tech-card{ background:var(--surface); border:1.5px solid var(--dim); border-radius:24px; padding:28px 24px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; transition:transform .5s var(--spring),box-shadow .5s ease,border-color .3s; }
 .tech-card:hover { transform:translateY(-12px) scale(1.03); box-shadow:0 24px 56px rgba(0,0,0,.08); border-color:var(--teal); }
 .tech-emoji{ font-size:52px; }
 .tech-name { font-family:'Nunito',sans-serif; font-weight:800; font-size:24px; color:var(--text); }
@@ -470,11 +470,14 @@ img, video, canvas, svg { max-width:100%; max-height:100%; }
     pointer-events:none;
 }
 #s5 .s5-body { position:relative; z-index:1; }
-#s5 .s5-grid > div:nth-child(1) { border-top:3px solid #3776AB; } /* Python */
-#s5 .s5-grid > div:nth-child(2) { border-top:3px solid #61DAFB; } /* React  */
-#s5 .s5-grid > div:nth-child(3) { border-top:3px solid var(--teal); }   /* Plaid  */
-#s5 .s5-grid > div:nth-child(4) { border-top:3px solid #10A37F; } /* OpenAI */
-#s5 .s5-grid > div:nth-child(5) { border-top:3px solid #4479A1; } /* SQLite */
+#s5 .s5-grid > div:nth-child(1) { border-top:3px solid #3776AB; } /* Python  */
+#s5 .s5-grid > div:nth-child(2) { border-top:3px solid #61DAFB; } /* React   */
+#s5 .s5-grid > div:nth-child(3) { border-top:3px solid #010101; } /* Socket.IO */
+#s5 .s5-grid > div:nth-child(4) { border-top:3px solid var(--gold); } /* JWT  */
+#s5 .s5-grid > div:nth-child(5) { border-top:3px solid var(--teal); } /* Plaid */
+#s5 .s5-grid > div:nth-child(6) { border-top:3px solid #10A37F; } /* OpenAI  */
+#s5 .s5-grid > div:nth-child(7) { border-top:3px solid #4479A1; } /* SQLite  */
+#s5 .s5-grid > div:nth-child(8) { border-top:3px solid var(--coral); } /* SQLAlchemy */
 
 /* S6 — glowing step nodes + ghost numerals in background */
 #s6 .step-num {
