@@ -1,15 +1,26 @@
-// LevelUpModal.jsx — level-up celebration overlay
-//
-// appears when an action causes the user's level to increase
-//
-// expected inputs:
-//   isOpen        → whether the modal is visible
-//   newLevel      → the user's newly reached level
-//   unlockedItem  → the furniture item unlocked at that level
-//   onClose       → closes the celebration
-//
-// responsibilities:
-//   - show the new level
-//   - show the newly unlocked furniture item
-//   - display a small savings summary or graph
-//   - later support celebration animations
+export default function LevelUpModal({ isOpen, newLevel, unlockedItem, onClose }) {
+  if (!isOpen) return null;
+
+  // figure out what to show for the unlock
+  let unlockText;
+  if (newLevel === 5) {
+    unlockText = "A friend moves in with you!";
+  } else if (unlockedItem) {
+    unlockText = `You unlocked: ${unlockedItem}!`;
+  } else {
+    unlockText = "Keep going!";
+  }
+
+  return (
+    <div className="modalBackground">
+      <div className="modalWindow">
+        <div className="closeModal">
+          <button onClick={onClose}>[ X ]</button>
+        </div>
+        <p className="eyebrow">Level up!</p>
+        <h2 className="header">Level {newLevel}</h2>
+        <p>{unlockText}</p>
+      </div>
+    </div>
+  );
+}

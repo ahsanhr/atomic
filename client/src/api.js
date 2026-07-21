@@ -53,3 +53,15 @@ export function syncPlaidTransactions() {
 export function getDashboard() {
   return request("/dashboard");
 }
+
+export function getRoom() {
+  return request("/room");
+}
+
+export function getQuests() {
+  return request("/quests");
+}
+
+export function completeQuest(questKey) {
+  return request(`/quests/${questKey}/complete`, { method: "POST" });
+}

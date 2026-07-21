@@ -36,6 +36,7 @@ def create_app(config_class=Config):
     from app.openai_service import openai_api
     from app.budget_routes import budget_api
     from app.plaid_routes import plaid_api
+    from app.quest_routes import quest_api
     __import__("app.socket_events")  # registers the connect/disconnect handlers
 
     app.register_blueprint(api, url_prefix="/api")
@@ -43,6 +44,7 @@ def create_app(config_class=Config):
     app.register_blueprint(openai_api, url_prefix="/api")
     app.register_blueprint(budget_api, url_prefix="/api")
     app.register_blueprint(plaid_api)
+    app.register_blueprint(quest_api, url_prefix="/api/quests")
 
     @app.get("/health")
     def health():

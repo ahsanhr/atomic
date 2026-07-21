@@ -1,5 +1,7 @@
 import NavBar from "../components/Navbar";
 import Hub from "./Hub.jsx"
+import LevelUpModal from "../components/LevelUpModal";
+import { getRoom, getQuests, completeQuest } from "../api";
 import "../room.css";
 import { 
   Canvas, 
@@ -359,45 +361,59 @@ function LaptopModal( {closeModal} ) {
   )
 }
 
-const QuestCard = ({quest, onToggle}) => {
+const QuestCard = ({ quest, onComplete }) => {
+  const clickable = !quest.completed && !quest.auto;
   return (
-    <div 
+    <div
       className={`${"questCard"} ${quest.completed ? "questCardCompleted" : ''}`}
-      onClick={() => onToggle(quest.id)}
-      >
-        <div className={`${"circle"} ${quest.completed ? "circleCompleted" : ''}`}></div>       
-        <span className={`${"questText"} ${quest.completed ? "questTextCompleted" : ''}`}>
-          {quest.text} (+ {quest.exp} EXP)
-        </span>
+      onClick={() => clickable && onComplete(quest.key)}
+    >
+      <div className={`${"circle"} ${quest.completed ? "circleCompleted" : ''}`}></div>
+      <span className={`${"questText"} ${quest.completed ? "questTextCompleted" : ''}`}>
+        {quest.label} (+ {quest.xp} EXP)
+      </span>
     </div>
-  )
+  );
 }
 
-function BookModal( {closeModal} ) {
-  const [quests, setQuests] = useState([
-    { id: 1, type: 'daily', text: 'check your daily transactions!', exp: 50, completed: false },
-    { id: 2, type: 'daily', text: 'look at the daily finance tip!', exp: 20, completed: false },
-    { id: 3, type: 'weekly', text: 'input a savings goal!', exp: 100, completed: false },
-    { id: 4, type: 'weekly', text: 'login 7 times this week!', exp: 150, completed: false },
-    { id: 5, type: 'weekly', text: 'make your own coffee 4x this week', exp: 80, completed: false },
-  ]);
+function BookModal({ closeModal, onLevelChange }) {
+  const [quests, setQuests] = useState([]);
+  const [levelUpInfo, setLevelUpInfo] = useState(null);
 
-  const toggleQuest = (id) => {
-    setQuests((prevQuests) =>
-      prevQuests.map((quest) =>
-        quest.id === id ? { ...quest, completed: !quest.completed } : quest
-      )
-    );
+  const loadQuests = async () => {
+    try {
+      const data = await getQuests();
+      setQuests(data.quests);
+    } catch (err) {
+      console.error("couldnt load quests", err);
+    }
   };
 
-  const dailyQuests = quests.filter(q => q.type === 'daily');
-  const weeklyQuests = quests.filter(q => q.type === 'weekly');
+  useEffect(() => {
+    loadQuests();
+  }, []);
 
-  return( 
+  const handleComplete = async (questKey) => {
+    try {
+      const result = await completeQuest(questKey);
+      if (result.leveled_up) {
+        setLevelUpInfo({ level: result.new_level, furniture: result.furniture });
+        if (onLevelChange) onLevelChange();
+      }
+      await loadQuests();
+    } catch (err) {
+      console.error("quest completion failed", err);
+    }
+  };
+
+  const dailyQuests = quests.filter(q => q.period === 'daily');
+  const weeklyQuests = quests.filter(q => q.period === 'weekly');
+
+  return(
     <div className="modalBackground">
       <div className="modalWindow">
         <div className="closeModal">
-          <button 
+          <button
             onClick={() => {
               closeModal(null);
             }}
@@ -413,39 +429,52 @@ function BookModal( {closeModal} ) {
         </h3>
         <div>
         {dailyQuests.map((quest) => (
-          <QuestCard 
-            key={quest.id} 
-            quest={quest} 
-            onToggle={toggleQuest} 
+          <QuestCard
+            key={quest.key}
+            quest={quest}
+            onComplete={handleComplete}
           />
         ))}
-      </div>
+        </div>
         <h3 className="sectionTitle">
           Weekly
         </h3>
         <div>
         {weeklyQuests.map((quest) => (
-          <QuestCard 
-            key={quest.id} 
-            quest={quest} 
-            onToggle={toggleQuest} 
+          <QuestCard
+            key={quest.key}
+            quest={quest}
+            onComplete={handleComplete}
           />
         ))}
+        </div>
       </div>
-      </div>
+      <LevelUpModal
+        isOpen={levelUpInfo !== null}
+        newLevel={levelUpInfo?.level}
+        unlockedItem={levelUpInfo?.furniture}
+        onClose={() => setLevelUpInfo(null)}
+      />
     </div>
-  )
+  );
 }
 
 
 export default function Room() {
   const [activeModal, setActiveModal] = useState(null);
   const [level, setLevel] = useState(0);
+  const [animation, setAnimation] = useState('Idle');
+
+  const refreshLevel = () => {
+    getRoom().then(data => setLevel(data.level)).catch(() => {});
+  };
+
+  useEffect(() => {
+    refreshLevel();
+  }, []);
 
   const levelUp = () => setLevel(prevLevel => prevLevel + 1)
   const levelDown = () => setLevel(prevLevel => Math.max(0, prevLevel - 1))
-
-  const [animation, setAnimation] = useState('Idle');
 
   useEffect(() => {
     const walkTimer = setInterval(() => {
@@ -506,7 +535,7 @@ export default function Room() {
 
       {activeModal === 'poster' && <PosterModal closeModal={setActiveModal} /> }
       {activeModal === 'laptop' && <LaptopModal closeModal={setActiveModal} />}
-      {activeModal === 'book' && <BookModal closeModal={setActiveModal} />}
+      {activeModal === 'book' && <BookModal closeModal={setActiveModal} onLevelChange={refreshLevel} />}
 
     </div>
 
