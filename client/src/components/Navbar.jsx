@@ -8,8 +8,8 @@ export default function NavBar() {
         <div className="logo-image"></div>
         <h2>Atomic</h2>
       </a>
+      <a href="/room">Room</a>
       
     </nav>
   );
 }
-

@@ -216,52 +216,56 @@ function Avatar({currentAction}) {
   const { scene, animations } = useGLTF('/avatar.glb');
   const { actions } = useAnimations(animations, group);
 
-  // 2. Track walking direction (1 for right, -1 for left)
-  const direction = useRef(1);
-  const moveSpeed = 2; // How fast they walk (units per second)
+  const walkTimer = useRef(0);
+  const moveSpeed = 2; 
+  const startZ = 0;
 
-  // Handle Animation Crossfading (same as before)
   useEffect(() => {
     const action = actions[currentAction];
     if (!action) return;
 
     action.reset().fadeIn(0.5).play();
 
-    return () => {
-      action.fadeOut(0.5);
-    };
+    // forces Happy and Sad to play exactly one time and stop
+    if (currentAction === 'Happy' || currentAction === 'Sad') {
+      action.setLoop(THREE.LoopOnce, 1);
+      action.clampWhenFinished = true; 
+    } else {
+      // Walk and Idle should loop normally
+      action.setLoop(THREE.LoopRepeat, Infinity);
+    }
+
+    return () => action.fadeOut(0.5);
   }, [currentAction, actions]);
 
-  // 3. Handle Physical Movement
   useFrame((state, delta) => {
-    if (!group.current) return; // Make sure the model has loaded
+    if (!group.current) return;
 
-    // Only move them if the Walk animation is active
     if (currentAction === 'Walk') {
+      // Add the time passed since last frame
+      walkTimer.current += delta;
       
-      // Move the character along the X axis
-      // We multiply by `delta` to ensure movement speed is consistent regardless of screen refresh rate
-      group.current.position.x += direction.current * moveSpeed * delta;
-
-      // Check boundaries to make them turn around
-      if (group.current.position.x > 3) {
-        // Too far right! Turn left.
-        direction.current = -1;
-        group.current.rotation.y = -Math.PI / 2; // Face left (Three.js uses radians)
+      // First 1.5 seconds: Walk forward on Z
+      if (walkTimer.current <= 1) {
+        group.current.position.z += moveSpeed * delta;
+        group.current.rotation.y = 0; // Face forward
       } 
-      else if (group.current.position.x < -3) {
-        // Too far left! Turn right.
-        direction.current = 1;
-        group.current.rotation.y = Math.PI / 2; // Face right
+      // Next 1.5 seconds: Turn around and walk back
+      else if (walkTimer.current <= 2) {
+        group.current.position.z -= moveSpeed * delta;
+        group.current.rotation.y = Math.PI; // Turn 180 degrees (Math.PI is half a circle)
       }
-
+    } else {
+      // Not walking? Reset everything so he's ready for the next 10-second trigger
+      walkTimer.current = 0;
+      group.current.position.z = startZ; // Snap exactly to start to prevent drifting
+      group.current.rotation.y = 0;      // Face forward for Idle/Happy/Sad
     }
   });
 
   return (
-    // Set a default rotation so the character starts facing right
-    <group ref={group} dispose={null} >
-      <primitive object={scene} position={[0,0,0]} />
+    <group ref={group} dispose={null}>
+      <primitive object={scene} />
     </group>
   );
 }
@@ -447,39 +451,37 @@ export default function Room() {
 
   const [animation, setAnimation] = useState('Idle');
 
+  const playReaction = (animName) => {
+    setAnimation(animName);
+  
+    setTimeout(() => {
+      setAnimation('Idle');
+    }, 7000); 
+  };
+
   useEffect(() => {
     const walkTimer = setInterval(() => {
       setAnimation('Walk');
       setTimeout(() => {
         setAnimation('Idle');
-      }, 10000);
+      }, 2000);
 
-    }, 25000);
+    }, 10000);
 
     return () => clearInterval(walkTimer);
   }, []);
-
+  
   return (
       <div className="simple-page">
         <NavBar />
         <div style={{ position: 'absolute', zIndex: 1, padding: '20px' }}>
-        <button 
-          onClick={() => {
-            levelDown();
-            setAnimation('Sad');
-          }}
-        >
-          Level Down
-        </button>
-        <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
-        <button 
-          onClick={() => {
-            levelUp();
-            setAnimation('Happy');
-          }}
-        >
-          Level Up
-        </button>      
+          <button onClick={() => { levelDown(); playReaction('Sad'); }}>
+            Level Down
+          </button>        
+          <span style={{ margin: '0 15px', color: 'white' }}>Current Level: {level}</span>
+          <button onClick={() => { levelUp(); playReaction('Happy'); }}>
+            Level Up
+          </button>
       </div>
       <div id="canvas-container">
       <Canvas shadows camera={{position: [-2.86,3.62,4.80], rotation: [-0.39,0.38,0.15]}}>
