@@ -67,7 +67,7 @@ export default function Signup() {
               {loading ? "Creating account..." : "Sign Up"}
             </button>
 
-            <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
+            <button className="auth-secondary-button" onClick={() => (window.location.href = "/login")}>
               I already have an account
             </button>
           </div>
