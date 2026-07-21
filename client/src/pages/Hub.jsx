@@ -3,6 +3,7 @@ import NavBar from "../components/Navbar";
 export default function Hub() {
   return (
     <Page title="Your progress" text="Your income, spending, savings, and quests will appear here." />
+    
   );
 }
 
@@ -14,6 +15,8 @@ function Page({ title, text }) {
         <p className="eyebrow">Financial hub</p>
         <h1>{title}</h1>
         <p>{text}</p>
+
+    
       </main>
     </div>
   );

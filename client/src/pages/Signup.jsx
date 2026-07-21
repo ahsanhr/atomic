@@ -50,7 +50,7 @@ export default function Signup() {
             </button>
 
             <button className="auth-secondary-button" onClick={() => (window.location.href = "/onboarding")}>
-              Welcome to Atomic
+              I already have an account
             </button>
           </div>
         </form>
