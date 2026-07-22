@@ -486,10 +486,14 @@ img, video, canvas, svg { max-width:100%; max-height:100%; }
     pointer-events:none;
 }
 #s5 .s5-body { position:relative; z-index:1; }
-#s5 .s5-grid > div:nth-child(1) { border-top:3px solid var(--teal); }
-#s5 .s5-grid > div:nth-child(2) { border-top:3px solid #10A37F; }
-#s5 .s5-grid > div:nth-child(3) { border-top:3px solid var(--gold); }
-#s5 .s5-grid > div:nth-child(4) { border-top:3px solid var(--coral); }
+#s5 .s5-grid > div:nth-child(1) { border-top:3px solid #3776AB; }
+#s5 .s5-grid > div:nth-child(2) { border-top:3px solid #61DAFB; }
+#s5 .s5-grid > div:nth-child(3) { border-top:3px solid #010101; }
+#s5 .s5-grid > div:nth-child(4) { border-top:3px solid var(--gold); }
+#s5 .s5-grid > div:nth-child(5) { border-top:3px solid var(--teal); }
+#s5 .s5-grid > div:nth-child(6) { border-top:3px solid #10A37F; }
+#s5 .s5-grid > div:nth-child(7) { border-top:3px solid #4479A1; }
+#s5 .s5-grid > div:nth-child(8) { border-top:3px solid var(--coral); }
 
 /* S6 — glowing step nodes + ghost numerals in background */
 #s6 .step-num {
