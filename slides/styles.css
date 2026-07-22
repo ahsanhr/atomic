@@ -308,6 +308,7 @@ img, video, canvas, svg { max-width:100%; max-height:100%; }
 .av-c   { background:var(--coral-lt); color:var(--coral); }
 .s2-name{ font-family:'Nunito',sans-serif; font-weight:800; font-size:36px; color:var(--text); }
 .s2-role{ font-size:20px; color:var(--muted); }
+.fun-fact { font-size:14px; font-family:'Nunito',sans-serif; font-weight:700; color:var(--coral); background:var(--coral-lt); border-radius:100px; padding:6px 16px; margin-top:10px; display:inline-block; font-style:italic; }
 
 /* ================================================
    SLIDE 3 — PROBLEM
