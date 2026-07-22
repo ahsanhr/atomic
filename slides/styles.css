@@ -308,7 +308,8 @@ img, video, canvas, svg { max-width:100%; max-height:100%; }
 .av-c   { background:var(--coral-lt); color:var(--coral); }
 .s2-name{ font-family:'Nunito',sans-serif; font-weight:800; font-size:36px; color:var(--text); }
 .s2-role{ font-size:20px; color:var(--muted); }
-.fun-fact { font-size:14px; font-family:'Nunito',sans-serif; font-weight:700; color:var(--coral); background:var(--coral-lt); border-radius:100px; padding:6px 16px; margin-top:10px; display:inline-block; font-style:italic; }
+.fun-fact { margin-top:14px; padding-top:12px; border-top:1.5px solid var(--dim); font-size:15px; font-family:'Nunito',sans-serif; font-weight:600; color:var(--muted); display:block; font-style:italic; text-align:center; }
+.ff-label { font-weight:800; color:var(--coral); font-style:normal; margin-right:4px; }
 
 /* ================================================
    SLIDE 3 — PROBLEM
